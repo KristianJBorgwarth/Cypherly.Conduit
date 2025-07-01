@@ -1,0 +1,6 @@
+@Cypherly.Gateway.API_HostAddress = http://localhost:5220
+
+GET {{Cypherly.Gateway.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
