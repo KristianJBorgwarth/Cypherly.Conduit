@@ -7,6 +7,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A68CC82A-2E57-461B-9D8F-0F9277E4C3EB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{92691545-A5BF-445B-AA19-931B07930D7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cypherly.Gateway.Test.Unit", "Cypherly.Gateway.Test.Unit\Cypherly.Gateway.Test.Unit.csproj", "{F37F4D7C-59C7-4652-98E0-FC4625E37C20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,5 +23,13 @@ Global
 		{1290981E-1799-49F2-A2F3-C024F23E613F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1290981E-1799-49F2-A2F3-C024F23E613F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1290981E-1799-49F2-A2F3-C024F23E613F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F37F4D7C-59C7-4652-98E0-FC4625E37C20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F37F4D7C-59C7-4652-98E0-FC4625E37C20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F37F4D7C-59C7-4652-98E0-FC4625E37C20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F37F4D7C-59C7-4652-98E0-FC4625E37C20}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1290981E-1799-49F2-A2F3-C024F23E613F} = {A68CC82A-2E57-461B-9D8F-0F9277E4C3EB}
+		{F37F4D7C-59C7-4652-98E0-FC4625E37C20} = {92691545-A5BF-445B-AA19-931B07930D7C}
 	EndGlobalSection
 EndGlobal
