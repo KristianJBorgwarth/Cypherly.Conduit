@@ -1,4 +1,4 @@
-﻿namespace Cypherly.Gateway.Test.Unit;
+﻿namespace Gateway.Test.Unit;
 
 public class UnitTest1
 {

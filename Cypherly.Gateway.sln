@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cypherly.Gateway.API", "Cypherly.Gateway.API\Cypherly.Gateway.API.csproj", "{1290981E-1799-49F2-A2F3-C024F23E613F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.API", "Gateway.API\Gateway.API.csproj", "{1290981E-1799-49F2-A2F3-C024F23E613F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{3BB87134-8278-4674-85A5-2CDFD38B5A9C}"
 	ProjectSection(SolutionItems) = preProject
@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A68CC82A-2E5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{92691545-A5BF-445B-AA19-931B07930D7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cypherly.Gateway.Test.Unit", "Cypherly.Gateway.Test.Unit\Cypherly.Gateway.Test.Unit.csproj", "{F37F4D7C-59C7-4652-98E0-FC4625E37C20}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Test.Unit", "Gateway.Test.Unit\Gateway.Test.Unit.csproj", "{F37F4D7C-59C7-4652-98E0-FC4625E37C20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
