@@ -1,5 +1,6 @@
 using System.Reflection;
 using Conduit.API.Extensions;
+using Scalar.AspNetCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +46,19 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+#region Scalar
+
+app.MapOpenApi();
+app.MapScalarApiReference(options =>
+{
+    options.WithTitle("Conduit.API")
+        .WithTheme(ScalarTheme.Purple)
+        .WithDarkModeToggle(false)
+        .WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Axios);
+});
+
+#endregion
 
 app.MapPrometheusScrapingEndpoint();
 app.UseSerilogRequestLogging();
