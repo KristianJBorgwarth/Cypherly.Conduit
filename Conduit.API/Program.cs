@@ -36,6 +36,7 @@ Serilog.Debugging.SelfLog.Enable(Console.Error);
 
 #endregion
 
+builder.Services.AddEndpoints();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
