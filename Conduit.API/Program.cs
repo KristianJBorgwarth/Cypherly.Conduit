@@ -51,6 +51,7 @@ app.UseSerilogRequestLogging();
 
 try
 {
+    Log.Information("Cypherly.Conduit.API starting up");
     app.Run();
 }
 catch (Exception ex)
