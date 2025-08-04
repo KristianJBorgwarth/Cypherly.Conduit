@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.API", "Gateway.API\Gateway.API.csproj", "{1290981E-1799-49F2-A2F3-C024F23E613F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.API", "Conduit.API\Conduit.API.csproj", "{1290981E-1799-49F2-A2F3-C024F23E613F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{3BB87134-8278-4674-85A5-2CDFD38B5A9C}"
 	ProjectSection(SolutionItems) = preProject
@@ -13,9 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{92691545-A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Test.Unit", "Gateway.Test.Unit\Gateway.Test.Unit.csproj", "{F37F4D7C-59C7-4652-98E0-FC4625E37C20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Application", "Gateway.Application\Gateway.Application.csproj", "{C28BBB6A-0161-4F64-B154-101C28E0A7A6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.Application", "Conduit.Application\Conduit.Application.csproj", "{C28BBB6A-0161-4F64-B154-101C28E0A7A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Infrastructure", "Gateway.Infrastructure\Gateway.Infrastructure.csproj", "{5B04123C-A508-47AA-B28C-E97C50F38889}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.Infrastructure", "Conduit.Infrastructure\Conduit.Infrastructure.csproj", "{5B04123C-A508-47AA-B28C-E97C50F38889}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.Domain", "Conduit.Domain\Conduit.Domain.csproj", "{064A6E68-2029-448C-93E8-8EE93615294D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,11 +41,16 @@ Global
 		{5B04123C-A508-47AA-B28C-E97C50F38889}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B04123C-A508-47AA-B28C-E97C50F38889}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B04123C-A508-47AA-B28C-E97C50F38889}.Release|Any CPU.Build.0 = Release|Any CPU
+		{064A6E68-2029-448C-93E8-8EE93615294D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{064A6E68-2029-448C-93E8-8EE93615294D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{064A6E68-2029-448C-93E8-8EE93615294D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{064A6E68-2029-448C-93E8-8EE93615294D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1290981E-1799-49F2-A2F3-C024F23E613F} = {A68CC82A-2E57-461B-9D8F-0F9277E4C3EB}
 		{F37F4D7C-59C7-4652-98E0-FC4625E37C20} = {92691545-A5BF-445B-AA19-931B07930D7C}
 		{C28BBB6A-0161-4F64-B154-101C28E0A7A6} = {A68CC82A-2E57-461B-9D8F-0F9277E4C3EB}
 		{5B04123C-A508-47AA-B28C-E97C50F38889} = {A68CC82A-2E57-461B-9D8F-0F9277E4C3EB}
+		{064A6E68-2029-448C-93E8-8EE93615294D} = {A68CC82A-2E57-461B-9D8F-0F9277E4C3EB}
 	EndGlobalSection
 EndGlobal

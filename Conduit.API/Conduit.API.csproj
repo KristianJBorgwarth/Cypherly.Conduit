@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <RootNamespace>Gateway.API</RootNamespace>
+        <RootNamespace>Conduit.API</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
