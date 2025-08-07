@@ -2,12 +2,12 @@
 
 internal sealed class DownstreamOptions
 {
-    private readonly List<DownStream> _downStreams = [];
+    public List<DownStream> DownStreams { get; init; } = [];
 
     public DownStream GetDownStream(string name)
     {
-        return _downStreams.FirstOrDefault(d => d.Name == name) 
-            ?? throw new ArgumentException($"{name} is not a valid DownStream");
+        return DownStreams.FirstOrDefault(d => d.Name == name) 
+               ?? throw new ArgumentException($"{name} is not a valid DownStream");
     }
 }
 

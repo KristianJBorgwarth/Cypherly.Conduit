@@ -10,9 +10,10 @@ public static class EndpointExtensions
         var assembly = typeof(Program).Assembly;
         var serviceDescriptors = assembly
             .DefinedTypes
-            .Where(type => type is { IsAbstract: false, IsInterface: false } &&
+            .Where(type => type is { IsAbstract: false, IsInterface: false } && 
                            type.IsAssignableTo(typeof(IEndpoint)))
             .Select(type => ServiceDescriptor.Transient(typeof(IEndpoint), type));
+        
         services.TryAddEnumerable(serviceDescriptors);
         return services;
     }

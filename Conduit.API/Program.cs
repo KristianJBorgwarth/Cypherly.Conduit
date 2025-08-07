@@ -68,6 +68,7 @@ app.MapScalarApiReference(options =>
 
 #endregion
 
+app.RegisterMinimalEndpoints();
 app.MapPrometheusScrapingEndpoint();
 app.UseSerilogRequestLogging();
 

@@ -8,6 +8,8 @@ internal static class OptionsExtensions
 {
     internal static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<DownstreamOptions>(configuration.GetSection("DownstreamOptions"));
+        services.AddOptions<DownstreamOptions>()
+            .Bind(configuration.GetSection("Api"))
+            .ValidateDataAnnotations();
     }
 }
