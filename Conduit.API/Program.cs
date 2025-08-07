@@ -1,5 +1,6 @@
 using System.Reflection;
 using Conduit.API.Extensions;
+using Conduit.Infrastructure.Extensions;
 using Scalar.AspNetCore;
 using Serilog;
 
@@ -33,6 +34,12 @@ builder.Host.UseSerilog();
 builder.Services.AddObservability(configuration);
 
 Serilog.Debugging.SelfLog.Enable(Console.Error);
+
+#endregion
+
+#region Infrastructure
+
+builder.Services.AddInfrastructure(configuration);
 
 #endregion
 
