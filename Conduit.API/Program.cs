@@ -1,5 +1,6 @@
 using System.Reflection;
 using Conduit.API.Extensions;
+using Conduit.Infrastructure.Extensions;
 using Scalar.AspNetCore;
 using Serilog;
 
@@ -36,7 +37,16 @@ Serilog.Debugging.SelfLog.Enable(Console.Error);
 
 #endregion
 
+#region Infrastructure
+
+builder.Services.AddInfrastructure(configuration);
+
+#endregion
+
+builder.Services.AddSecurity(configuration);
+
 builder.Services.AddEndpoints();
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -45,8 +55,6 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-app.UseHttpsRedirection();
 
 #region Scalar
 
@@ -61,8 +69,17 @@ app.MapScalarApiReference(options =>
 
 #endregion
 
+app.UseHttpsRedirection();
+
+app.RegisterMinimalEndpoints();
+
 app.MapPrometheusScrapingEndpoint();
+
 app.UseSerilogRequestLogging();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 try
 {
