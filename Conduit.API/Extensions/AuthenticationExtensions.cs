@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Conduit.API.Extensions;
@@ -7,7 +8,7 @@ internal static class AuthenticationExtensions
 {
     internal static void AddSecurity(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthentication()
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
