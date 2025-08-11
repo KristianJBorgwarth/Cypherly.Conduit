@@ -14,9 +14,9 @@ public sealed record Error
         Description = description;
     }
 
-    public static Error NotFound(string code, string? descriptionTemplate = null, params object[] args)
+    public static Error NotFound(string code, string? description = null )
     {
-        return new Error(code, ErrorType.NotFound, string.Format(descriptionTemplate, args));
+        return new Error(code, ErrorType.NotFound, description);
     }
     
     public static Error Unauthorized(string code, string description)

@@ -15,11 +15,11 @@ public sealed class GetUserProfileQueryHandler(
     {
         try
         {
-            var userProfile = await userProfileProvider.GetUserProfile();
+            var userProfile = await userProfileProvider.GetUserProfile(cancellationToken);
             if (userProfile is null) 
                 return Result.Fail<GetUserProfileDto>(Error.NotFound("UserProfile not found"));
             
-            var connectionIds = connectionIdProvider.GetConnectionIds();
+            var connectionIds = await connectionIdProvider.GetConnectionIds(cancellationToken);
             
             var dto = new GetUserProfileDto(userProfile, connectionIds);
             return Result.Ok(dto);

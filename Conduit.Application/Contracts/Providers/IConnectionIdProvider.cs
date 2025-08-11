@@ -2,5 +2,5 @@
 
 public interface IConnectionIdProvider
 {
-    public List<Guid> GetConnectionIds();
+    public Task<List<Guid>> GetConnectionIds(CancellationToken cancellationToken = default);
 }

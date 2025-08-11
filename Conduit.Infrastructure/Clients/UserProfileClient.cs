@@ -13,9 +13,9 @@ internal sealed class UserProfileClient(
 {
     private readonly HttpClient _client = factory.CreateClient(ClientNames.UserProfileClient);
     
-    public async Task<UserProfile?> GetUserProfile()
+    public async Task<UserProfile?> GetUserProfile(CancellationToken cancellationToken = default)
     {
-        var response = await _client.GetAsync("");
+        var response = await _client.GetAsync("", cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -23,7 +23,7 @@ internal sealed class UserProfileClient(
             return null;
         }
 
-        var envelope = await response.Content.ReadFromJsonAsync<Envelope<UserProfile>>();
+        var envelope = await response.Content.ReadFromJsonAsync<Envelope<UserProfile>>(cancellationToken: cancellationToken);
 
         return envelope?.Result;
     }
