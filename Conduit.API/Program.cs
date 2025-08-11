@@ -57,16 +57,13 @@ app.MapScalarApiReference(options =>
 
 
 app.UseHttpsRedirection();
+app.UseSerilogRequestLogging();
+app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.RegisterMinimalEndpoints();
-
 app.MapPrometheusScrapingEndpoint();
-
-app.UseSerilogRequestLogging();
-
-app.UseAuthentication();
-
-app.UseAuthorization();
 
 try
 {
