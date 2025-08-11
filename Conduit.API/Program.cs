@@ -6,7 +6,6 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-#region Appsettings
 
 var env = builder.Environment;
 
@@ -21,10 +20,6 @@ if (env.IsDevelopment())
     configuration.AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 }
 
-#endregion
-
-#region Logger
-
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(configuration)
     .CreateLogger();
@@ -35,13 +30,8 @@ builder.Services.AddObservability(configuration);
 
 Serilog.Debugging.SelfLog.Enable(Console.Error);
 
-#endregion
-
-#region Infrastructure
-
 builder.Services.AddInfrastructure(configuration);
 
-#endregion
 
 builder.Services.AddSecurity(configuration);
 
@@ -56,8 +46,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-#region Scalar
-
 app.MapOpenApi();
 app.MapScalarApiReference(options =>
 {
@@ -67,7 +55,6 @@ app.MapScalarApiReference(options =>
         .WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Axios);
 });
 
-#endregion
 
 app.UseHttpsRedirection();
 
