@@ -37,7 +37,7 @@ internal static class HttpClientExtensions
             client.BaseAddress = uri;
         });
 
-        if (downstream.UsesAuthentication is false) return;
+        if (!downstream.UsesAuthentication) return;
         
         httpClientBuilder.AddHeaderPropagation(headerOptions => headerOptions.Headers.Add("Authorization"));
     }
