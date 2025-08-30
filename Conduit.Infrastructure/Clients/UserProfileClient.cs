@@ -15,7 +15,7 @@ internal sealed class UserProfileClient(
     
     public async Task<UserProfile?> GetUserProfile(Guid exclusiveConnectionId, CancellationToken cancellationToken = default)
     {
-        var response = await _client.GetAsync($"?{exclusiveConnectionId}", cancellationToken);
+        var response = await _client.GetAsync($"?ExclusiveConnectionId={exclusiveConnectionId}", cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
