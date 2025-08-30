@@ -11,6 +11,11 @@ internal static class HttpClientExtensions
 {
     internal static void ConfigureHttpClients(this IServiceCollection services)
     {
+        services.AddHeaderPropagation(options =>
+        {
+            options.Headers.Add("Authorization");
+        });
+        
         var downStreamOptions =services.BuildServiceProvider().GetRequiredService<IOptions<DownstreamOptions>>().Value;
         
         // Clients
@@ -38,7 +43,7 @@ internal static class HttpClientExtensions
         });
 
         if (!downstream.UsesAuthentication) return;
-        
-        httpClientBuilder.AddHeaderPropagation(headerOptions => headerOptions.Headers.Add("Authorization"));
+
+        httpClientBuilder.AddHeaderPropagation();
     }
 }

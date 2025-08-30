@@ -21,15 +21,18 @@ if (env.IsDevelopment())
     configuration.AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 }
 
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(configuration)
-    .CreateLogger();
+if (env.IsProduction())
+{
+    Log.Logger = new LoggerConfiguration()
+        .ReadFrom.Configuration(configuration)
+        .CreateLogger();
 
-builder.Host.UseSerilog();
+    builder.Host.UseSerilog();
 
-builder.Services.AddObservability(configuration);
+    builder.Services.AddObservability(configuration);
 
-Serilog.Debugging.SelfLog.Enable(Console.Error);
+    Serilog.Debugging.SelfLog.Enable(Console.Error);
+}
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddApplication();
@@ -37,14 +40,8 @@ builder.Services.AddInfrastructure(configuration);
 builder.Services.AddSecurity(configuration);
 builder.Services.AddEndpoints();
 builder.Services.AddOpenApi();
-builder.Services.AddHeaderPropagation();
 
 var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
 
 app.MapOpenApi();
 app.MapScalarApiReference(options =>
@@ -57,13 +54,16 @@ app.MapScalarApiReference(options =>
 
 
 app.UseHttpsRedirection();
-app.UseSerilogRequestLogging();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHeaderPropagation();
-
 app.RegisterMinimalEndpoints();
-app.MapPrometheusScrapingEndpoint();
+
+if (env.IsProduction())
+{
+    app.UseSerilogRequestLogging();
+    app.MapPrometheusScrapingEndpoint();
+}
 
 try
 {
