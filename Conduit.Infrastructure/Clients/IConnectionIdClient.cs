@@ -14,6 +14,11 @@ internal sealed class ConnectionIdClient(
 
     public async Task<List<Guid>> GetConnectionIds(CancellationToken cancellationToken = default)
     {
+        foreach (var header in _client.DefaultRequestHeaders)
+        {
+            logger.LogInformation("Outgoing Header: {Key} = {Value}", header.Key, string.Join(", ", header.Value));
+        }
+        
         var response = await _client.GetAsync("", cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
