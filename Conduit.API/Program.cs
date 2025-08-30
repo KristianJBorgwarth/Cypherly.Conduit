@@ -31,6 +31,7 @@ builder.Services.AddObservability(configuration);
 
 Serilog.Debugging.SelfLog.Enable(Console.Error);
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(configuration);
 builder.Services.AddSecurity(configuration);
