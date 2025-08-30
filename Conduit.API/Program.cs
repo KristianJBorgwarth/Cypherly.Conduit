@@ -38,6 +38,8 @@ builder.Services.AddEndpoints();
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddHeaderPropagation();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -59,6 +61,7 @@ app.UseHttpsRedirection();
 app.UseSerilogRequestLogging();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseHeaderPropagation();
 
 app.RegisterMinimalEndpoints();
 app.MapPrometheusScrapingEndpoint();
