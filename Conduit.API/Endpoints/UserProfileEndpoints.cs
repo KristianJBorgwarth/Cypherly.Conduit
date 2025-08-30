@@ -12,9 +12,9 @@ public sealed class UserProfileEndpoints : IEndpoint
             .WithTags("user-profile")
             .RequireAuthorization();
 
-        group.MapGet("/", async ([FromServices]ISender sender) =>
+        group.MapGet("/", async ([FromServices]ISender sender, [FromQuery] Guid exclusiveConnectionId) =>
         {
-            var result = await sender.Send(new GetUserProfileQuery());
+            var result = await sender.Send(new GetUserProfileQuery { ExclusiveConnectionId = exclusiveConnectionId });
             return result.Success ? Results.Ok(result.Value) : Results.BadRequest();
         });
     }

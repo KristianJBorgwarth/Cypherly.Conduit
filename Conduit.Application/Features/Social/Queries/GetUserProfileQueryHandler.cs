@@ -15,7 +15,7 @@ public sealed class GetUserProfileQueryHandler(
     {
         try
         {
-            var userProfile = await userProfileProvider.GetUserProfile(cancellationToken);
+            var userProfile = await userProfileProvider.GetUserProfile(request.ExclusiveConnectionId, cancellationToken);
             if (userProfile is null) 
                 return Result.Fail<GetUserProfileDto>(Error.NotFound("UserProfile not found"));
             

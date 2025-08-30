@@ -2,4 +2,7 @@
 
 namespace Conduit.Application.Features.Social.Queries;
 
-public sealed record GetUserProfileQuery : IQuery<GetUserProfileDto>;
+public sealed record GetUserProfileQuery : IQuery<GetUserProfileDto>
+{
+    public required Guid ExclusiveConnectionId { get; init; }
+}
