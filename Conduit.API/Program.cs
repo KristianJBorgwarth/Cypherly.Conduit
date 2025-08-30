@@ -1,5 +1,6 @@
 using System.Reflection;
 using Conduit.API.Extensions;
+using Conduit.Application.Extensions;
 using Conduit.Infrastructure.Extensions;
 using Scalar.AspNetCore;
 using Serilog;
@@ -30,14 +31,11 @@ builder.Services.AddObservability(configuration);
 
 Serilog.Debugging.SelfLog.Enable(Console.Error);
 
+builder.Services.AddApplication();
 builder.Services.AddInfrastructure(configuration);
-
 builder.Services.AddSecurity(configuration);
-
 builder.Services.AddEndpoints();
-
 builder.Services.AddOpenApi();
-
 builder.Services.AddHeaderPropagation();
 
 var app = builder.Build();
