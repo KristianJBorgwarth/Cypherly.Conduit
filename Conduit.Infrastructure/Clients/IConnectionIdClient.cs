@@ -24,10 +24,10 @@ internal sealed class ConnectionIdClient(
         }
 
         var envelope =
-            await response.Content.ReadFromJsonAsync<Envelope<ConnectionIds>>(cancellationToken: cancellationToken);
+            await response.Content.ReadFromJsonAsync<Envelope<ConnectionIdsDto>>(cancellationToken: cancellationToken);
 
-        return envelope?.Result?.Ids ?? [];
+        return envelope?.Result?.ConnectionIds ?? [];
     }
     
-    private sealed record ConnectionIds(IReadOnlyCollection<Guid> Ids);
+    private sealed record ConnectionIdsDto(IReadOnlyCollection<Guid> ConnectionIds);
 }
