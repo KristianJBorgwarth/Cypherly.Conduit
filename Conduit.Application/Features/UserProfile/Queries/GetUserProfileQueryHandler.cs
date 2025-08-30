@@ -3,7 +3,7 @@ using Conduit.Application.Contracts.Providers;
 using Conduit.Domain.Common;
 using Microsoft.Extensions.Logging;
 
-namespace Conduit.Application.Features.Social.Queries;
+namespace Conduit.Application.Features.UserProfile.Queries;
 
 public sealed class GetUserProfileQueryHandler(
     IUserProfileProvider userProfileProvider,
@@ -30,7 +30,7 @@ public sealed class GetUserProfileQueryHandler(
         catch (Exception ex)
         {
             logger.LogError(ex, "An exception occured while retrieving user profile for Tenant");
-            return Result.Fail<GetUserProfileDto>(Error.NotFound("UserProfile not found"));
+            return Result.Fail<GetUserProfileDto>(Error.Failure("INTERNAL_ERROR", "An unexpected error occured"));
         }
     }
 

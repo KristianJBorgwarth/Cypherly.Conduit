@@ -1,7 +1,8 @@
-﻿using Conduit.Domain.Models;
-// ReSharper disable ConvertToPrimaryConstructor
+﻿
 
-namespace Conduit.Application.Features.Social.Queries;
+// ReSharper disable ConvertToPrimaryConstructor
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+namespace Conduit.Application.Features.UserProfile.Queries;
 
 public sealed class GetUserProfileDto
 {
@@ -12,7 +13,7 @@ public sealed class GetUserProfileDto
     public string? DisplayName { get; private init; }
     public IReadOnlyCollection<Guid>  ConnectionIds { get; private init; }
  
-    public GetUserProfileDto(UserProfile profile, IReadOnlyCollection<Guid> connectionIds)
+    public GetUserProfileDto(Domain.Models.UserProfile profile, IReadOnlyCollection<Guid> connectionIds)
     {
         Id = profile.Id;
         Username = profile.Username;

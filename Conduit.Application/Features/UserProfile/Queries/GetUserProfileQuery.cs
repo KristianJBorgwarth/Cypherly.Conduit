@@ -1,6 +1,6 @@
 ﻿using Conduit.Application.Abstractions;
 
-namespace Conduit.Application.Features.Social.Queries;
+namespace Conduit.Application.Features.UserProfile.Queries;
 
 public sealed record GetUserProfileQuery : IQuery<GetUserProfileDto>
 {

@@ -29,7 +29,7 @@ public sealed record Error
         return new Error("Error.Validation", ErrorType.Validation, description);
     }
 
-    public static Error? Failure(string code, string description)
+    public static Error? Failure(string? code, string description)
     {
         return new Error(code, ErrorType.Failure, description);
     }
