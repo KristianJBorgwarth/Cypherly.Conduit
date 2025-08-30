@@ -1,4 +1,4 @@
-﻿using Conduit.Application.Features.Social.Queries;
+﻿using Conduit.Application.Features.UserProfile.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
