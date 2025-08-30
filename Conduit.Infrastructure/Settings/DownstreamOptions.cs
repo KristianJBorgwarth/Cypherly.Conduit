@@ -1,4 +1,5 @@
-﻿namespace Conduit.Infrastructure.Settings;
+﻿// ReSharper disable MemberCanBePrivate.Global
+namespace Conduit.Infrastructure.Settings;
 
 internal sealed class DownstreamOptions
 {

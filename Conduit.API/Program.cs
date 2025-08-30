@@ -32,7 +32,6 @@ Serilog.Debugging.SelfLog.Enable(Console.Error);
 
 builder.Services.AddInfrastructure(configuration);
 
-
 builder.Services.AddSecurity(configuration);
 
 builder.Services.AddEndpoints();
@@ -61,7 +60,6 @@ app.UseSerilogRequestLogging();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
 app.RegisterMinimalEndpoints();
 app.MapPrometheusScrapingEndpoint();
 
@@ -80,4 +78,4 @@ finally
 }
 
 // Required for integration tests
-public partial class Program { }
+public partial class Program;
