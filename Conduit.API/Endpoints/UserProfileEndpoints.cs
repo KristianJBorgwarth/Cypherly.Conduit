@@ -1,5 +1,7 @@
-﻿using Conduit.Application.Features.UserProfile.Queries.GetUserProfile;
+﻿using Conduit.API.Common;
+using Conduit.Application.Features.UserProfile.Queries.GetUserProfile;
 using Conduit.Application.Features.UserProfile.Queries.GetUserProfileByTag;
+using Conduit.Domain.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +19,7 @@ public sealed class UserProfileEndpoints : IEndpoint
         group.MapGet("/", async ([FromServices] ISender sender, [FromQuery] Guid exclusiveConnectionId) =>
             {
                 var result = await sender.Send(new GetUserProfileQuery { ExclusiveConnectionId = exclusiveConnectionId });
-                return result.Success ? Results.Ok(result.Value) : Results.BadRequest();
+                return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
             })
             .Produces<GetUserProfileDto>()
             .ProducesProblem(StatusCodes.Status404NotFound);
@@ -25,7 +27,9 @@ public sealed class UserProfileEndpoints : IEndpoint
         group.MapGet("/tag", async ([FromServices] ISender sender, [FromQuery] string tag) =>
             {
                 var result = await sender.Send(new GetUserProfileByTagQuery { UserTag = tag });
-                return result.Success ? Results.Ok(result.Value) : Results.BadRequest();
+                if (!result.Success) return result.ToProblemDetails();
+                
+                return result.Value != null ? Results.Ok(result.Value) : Results.NoContent();
             })
             .Produces<GetUserProfileByTagDto>()
             .Produces(StatusCodes.Status204NoContent)
