@@ -19,12 +19,12 @@ public sealed class GetUserProfileQueryHandler(
             var profileResult = await userProfileProvider.GetUserProfile(request.ExclusiveConnectionId, cancellationToken);
             if (!profileResult.Success) return Result.Fail<GetUserProfileDto>(profileResult.Error);
 
-            var connectionIdsResult = await connectionIdProvider.GetConnectionIds(cancellationToken);
-            if (!connectionIdsResult.Success) return Result.Fail<GetUserProfileDto>(connectionIdsResult.Error);
+            var conIdsResult = await connectionIdProvider.GetConnectionIds(cancellationToken);
+            if (!conIdsResult.Success) return Result.Fail<GetUserProfileDto>(conIdsResult.Error);
             
-            var connectionIds = RemoveConnectionId(connectionIdsResult.Value, request.ExclusiveConnectionId);
+            var connectionIds = RemoveConnectionId(conIdsResult.RequiredValue, request.ExclusiveConnectionId);
 
-            var dto = new GetUserProfileDto(profileResult.Value, connectionIds);
+            var dto = new GetUserProfileDto(profileResult.RequiredValue, connectionIds);
             return Result.Ok(dto);
         }
         catch (Exception ex)

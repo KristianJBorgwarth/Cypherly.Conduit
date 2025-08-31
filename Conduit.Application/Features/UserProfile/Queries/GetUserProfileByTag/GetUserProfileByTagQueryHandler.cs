@@ -14,8 +14,8 @@ public sealed class GetUserProfileByTagQueryHandler(
     {
         try
         {
-            var userProfile = await userProfileProvider.GetUserProfileByTag(request.UserTag, ct);
-            return userProfile == null ? Result.Ok<GetUserProfileByTagDto>() : Result.Ok(userProfile);
+            var profileResult = await userProfileProvider.GetUserProfileByTag(request.UserTag, ct);
+            return !profileResult.Success ? Result.Fail<GetUserProfileByTagDto>(profileResult.Error) : profileResult;
         }
         catch (Exception ex)
         {

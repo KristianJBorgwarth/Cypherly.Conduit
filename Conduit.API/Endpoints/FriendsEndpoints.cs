@@ -23,7 +23,7 @@ public sealed class FriendsEndpoints : IEndpoint
         {
             var result = await sender.Send(new GetFriendsQuery());
             if (!result.Success) return result.ToProblemDetails();
-            return result.Value?.Count > 0 ? Results.Ok(result.Value) : Results.NoContent();
+            return result.RequiredValue.Count > 0 ? Results.Ok(result.RequiredValue) : Results.NoContent();
         });
 
         group.MapPost("", async ([FromServices] ISender sender, [FromBody] CreateFriendshipRequest req) =>
@@ -39,7 +39,7 @@ public sealed class FriendsEndpoints : IEndpoint
         {
             var result = await sender.Send(new GetFriendRequestsQuery());
             if (!result.Success) return result.ToProblemDetails();
-            return result.Value?.Count > 0 ? Results.Ok(result.Value) : Results.NoContent();
+            return result.RequiredValue.Count > 0 ? Results.Ok(result.RequiredValue) : Results.NoContent();
         })
         .Produces<IReadOnlyCollection<GetFriendRequestsDto>>()
         .Produces(StatusCodes.Status204NoContent)
