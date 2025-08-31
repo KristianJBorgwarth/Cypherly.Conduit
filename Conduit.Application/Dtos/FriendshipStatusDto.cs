@@ -3,14 +3,8 @@ using Conduit.Domain.Enums;
 
 namespace Conduit.Application.Dtos;
 
-public sealed class FriendshipStatusDto
+public sealed record FriendshipStatusDto
 {
-    public FriendshipStatus Status { get; private init; }
-    public FriendshipDirection Direction { get; private init; }
-    
-    public FriendshipStatusDto(FriendshipStatus status, FriendshipDirection direction)
-    {
-        Status = status;
-        Direction = direction;
-    }
+    public FriendshipStatus? Status { get; init; }
+    public FriendshipDirection Direction { get; init; }
 }
