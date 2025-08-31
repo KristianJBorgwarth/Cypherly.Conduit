@@ -14,8 +14,7 @@ public sealed class DeleteFriendshipCommandHandler(
     {
         try
         {
-            await provider.DeleteFriendshipAsync(request.FriendTag, cancellationToken);
-            return Result.Ok();
+            return await provider.DeleteFriendshipAsync(request.FriendTag, cancellationToken);
         }
         catch (Exception e)
         {

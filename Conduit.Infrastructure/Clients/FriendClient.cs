@@ -1,8 +1,10 @@
 using System.Net.Http.Json;
 using Conduit.Application.Contracts.Providers;
 using Conduit.Application.Features.Friends.Queries.GetFriendRequests;
+using Conduit.Domain.Common;
 using Conduit.Domain.Models;
 using Conduit.Infrastructure.Constants;
+using Conduit.Infrastructure.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Conduit.Infrastructure.Clients;
@@ -44,10 +46,11 @@ internal sealed class FriendClient(
         return envelope?.Result ?? [];
     }
 
-    public async Task DeleteFriendshipAsync(string friendTag, CancellationToken ct = default)
+    public async Task<Result> DeleteFriendshipAsync(string friendTag, CancellationToken ct = default)
     {
         var encodedTag = Uri.EscapeDataString(friendTag);
         var response = await _client.DeleteAsync($"friendship/delete?friendtag={encodedTag}", ct);
-        response.EnsureSuccessStatusCode();
+        
+        return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct);
     }
 }

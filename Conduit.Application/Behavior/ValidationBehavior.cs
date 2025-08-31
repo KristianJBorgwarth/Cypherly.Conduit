@@ -40,6 +40,5 @@ public class ValidationBehavior<TRequest, TResponse>(
         }
 
         return (TResponse)Result.Fail(error);
-
     }
 }
