@@ -46,7 +46,8 @@ internal sealed class FriendClient(
 
     public async Task DeleteFriendshipAsync(string friendTag, CancellationToken ct = default)
     {
-        var response = await _client.DeleteAsync($"friendship/delete?friendtag={friendTag}", ct);
+        var encodedTag = Uri.EscapeDataString(friendTag);
+        var response = await _client.DeleteAsync($"friendship/delete?friendtag={encodedTag}", ct);
         response.EnsureSuccessStatusCode();
     }
 }
