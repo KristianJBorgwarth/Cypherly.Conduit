@@ -42,9 +42,7 @@ internal sealed class UserProfileClient(
             return await response.ToFailureResultAsync<GetUserProfileByTagDto>(ct: cancellationToken);
         }
 
-        if (response.StatusCode == HttpStatusCode.NoContent) 
-            return Result.Ok<GetUserProfileByTagDto>();
-        
+        if (response.StatusCode == HttpStatusCode.NoContent) return Result.Ok<GetUserProfileByTagDto>();
         return await response.GetValueFromEnvelopeAsync<GetUserProfileByTagDto>(ct: cancellationToken);
     }
 }
