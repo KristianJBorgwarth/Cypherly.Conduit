@@ -16,7 +16,7 @@ public sealed class GetFriendsQueryHandler(
     {
         try
         {
-            var friends = await friendProvider.GetFriends(ct);
+            var friends = await friendProvider.GetFriendsAsync(ct);
             if (friends.Count is 0) return Array.Empty<GetFriendsDto>();
             
             var friendIds = friends.Select(f => f.Id).ToList();

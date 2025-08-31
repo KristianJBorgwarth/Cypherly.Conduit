@@ -1,7 +1,8 @@
 using Conduit.Domain.Enums;
+
 // ReSharper disable ConvertToPrimaryConstructor
 
-namespace Conduit.Application.Dtos;
+namespace Conduit.Application.Features.Friends.Dtos;
 
 public sealed record FriendshipStatusDto
 {
