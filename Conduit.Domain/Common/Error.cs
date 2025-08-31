@@ -33,9 +33,9 @@ public sealed record Error
     {
         return new Error(code, ErrorType.Failure, description);
     }
-
-    public static Error NoContent(string code, string description)
+    
+    public static Error BadRequest(string code, string description)
     {
-        return new Error(code, ErrorType.NoContent, description);
+        return new Error(code, ErrorType.BadRequest, description);
     }
 }

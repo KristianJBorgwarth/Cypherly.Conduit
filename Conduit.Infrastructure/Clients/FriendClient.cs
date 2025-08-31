@@ -4,6 +4,7 @@ using Conduit.Application.Features.Friends.Queries.GetFriendRequests;
 using Conduit.Domain.Common;
 using Conduit.Domain.Models;
 using Conduit.Infrastructure.Constants;
+using Conduit.Infrastructure.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Conduit.Infrastructure.Clients;
@@ -50,9 +51,6 @@ internal sealed class FriendClient(
         var encodedTag = Uri.EscapeDataString(friendTag);
         var response = await _client.DeleteAsync($"friendship/delete?friendtag={encodedTag}", ct);
         
-        if (response.IsSuccessStatusCode) return Result.Ok(); 
-        
-        var envelope = await response.Content.ReadFromJsonAsync<Envelope>(cancellationToken: ct);
-        return Result.Fail(Error.Failure("Internal.Server.Error", envelope?.ErrorMessage ?? "An error occurred while deleting the friendship."));
+        return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct);
     }
 }
