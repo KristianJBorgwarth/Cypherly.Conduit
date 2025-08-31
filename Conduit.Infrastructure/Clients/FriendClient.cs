@@ -14,7 +14,7 @@ internal sealed class FriendClient(
     private readonly HttpClient _client = clientFactory.CreateClient(ClientNames.UserProfileClient);
     public async Task<IReadOnlyCollection<Friend>> GetFriendsAsync(CancellationToken ct = default)
     {
-        var response = await _client.GetAsync("/friendships", ct);
+        var response = await _client.GetAsync("friendships", ct);
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("FriendClient failed with status code {ResponseStatusCode}", response.StatusCode);
@@ -26,7 +26,7 @@ internal sealed class FriendClient(
 
     public async Task CreateFriendshipAsync(string friendTag, CancellationToken ct = default)
     {
-        var response = await _client.PostAsJsonAsync("/friendship", new { FriendTag = friendTag }, ct);
+        var response = await _client.PostAsJsonAsync("friendship", new { FriendTag = friendTag }, ct);
         
         if (!response.IsSuccessStatusCode)
         {
