@@ -28,7 +28,7 @@ public sealed class UserProfileEndpoints : IEndpoint
                 var result = await sender.Send(new GetUserProfileByTagQuery { UserTag = tag });
                 if (!result.Success) return result.ToProblemDetails();
                 
-                return result.Value is null ? Results.Ok(result.Value) : Results.NoContent();
+                return result.Value is not null ? Results.Ok(result.Value) : Results.NoContent();
             })
             .Produces<GetUserProfileByTagDto>()
             .Produces(StatusCodes.Status204NoContent)
