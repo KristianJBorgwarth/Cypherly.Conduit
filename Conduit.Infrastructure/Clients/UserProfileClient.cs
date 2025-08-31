@@ -32,7 +32,7 @@ internal sealed class UserProfileClient(
     public async Task<GetUserProfileByTagDto?> GetUserProfileByTag(string userTag, CancellationToken cancellationToken = default)
     {
         var encodedTag = Uri.EscapeDataString(userTag);
-        var response = await _client.GetAsync($"/tag?tag={encodedTag}", cancellationToken);
+        var response = await _client.GetAsync($"tag?tag={encodedTag}", cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
