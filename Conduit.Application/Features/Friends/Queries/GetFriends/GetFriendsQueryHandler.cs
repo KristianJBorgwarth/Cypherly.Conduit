@@ -29,7 +29,7 @@ public sealed class GetFriendsQueryHandler(
         catch (Exception ex)
         {
             logger.LogError(ex, "An exception occured while retrieving friends for Tenant");
-            return Result.Fail<IReadOnlyCollection<GetFriendsDto>>(Error.Failure( "Internal.Server.Error","An unexpected error occured"));
+            return Result.Fail<IReadOnlyCollection<GetFriendsDto>>(Error.Failure( "internal.server.error","An unexpected error occured"));
         }
     }
     

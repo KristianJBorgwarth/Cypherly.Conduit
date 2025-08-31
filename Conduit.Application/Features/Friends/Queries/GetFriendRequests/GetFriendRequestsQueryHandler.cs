@@ -20,7 +20,7 @@ public sealed class GetFriendRequestsQueryHandler(
         catch (Exception e)
         {
             logger.LogError("An exception occured while retrieving friend requests: {ExceptionMessage}", e.Message);
-            return Result.Fail<IReadOnlyCollection<GetFriendRequestsDto>>(Error.Failure("Internal.Server.Error", "An unexpected error occured"));
+            return Result.Fail<IReadOnlyCollection<GetFriendRequestsDto>>(Error.Failure("internal.server.error", "An unexpected error occured"));
         }
     }
 }

@@ -20,7 +20,7 @@ public sealed class CreateFriendshipCommandHandler(
         catch (Exception ex)
         {
             logger.LogError("Error creating friendship with tag {FriendTag}: {ErrorMessage}", request.FriendTag, ex.Message);
-            return Result.Fail(Error.Failure("Internal.Server.Error", "An error occurred while creating the friendship."));
+            return Result.Fail(Error.Failure("internal.server.error", "An error occurred while creating the friendship."));
         }        
     }
 }

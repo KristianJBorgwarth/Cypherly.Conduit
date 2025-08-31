@@ -19,7 +19,7 @@ public sealed class DeleteFriendshipCommandHandler(
         catch (Exception e)
         {
             logger.LogError(e, "Error deleting friendship with {FriendTag}", request.FriendTag); 
-            return Result.Fail(Error.Failure("Internal.Server.Error", "An internal server error occurred."));
+            return Result.Fail(Error.Failure("internal.server.error", "An internal server error occurred."));
         }
     }
 }
