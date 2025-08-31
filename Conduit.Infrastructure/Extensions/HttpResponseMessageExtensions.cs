@@ -46,8 +46,7 @@ public static class HttpResponseMessageExtensions
     {
         var envelope = await response.Content.ReadFromJsonAsync<Envelope<T>>(cancellationToken: ct);
 
-        if (!string.IsNullOrWhiteSpace(envelope?.ErrorMessage) 
-            && envelope.ErrorMessage.Contains("not found", StringComparison.OrdinalIgnoreCase))
+        if (!string.IsNullOrWhiteSpace(envelope?.ErrorMessage) && envelope.ErrorMessage.Contains("not found", StringComparison.OrdinalIgnoreCase))
         {
             return Result.Fail<T>(Error.NotFound("Not.Found", envelope.ErrorMessage ?? $"Entity of type {typeof(T).Name} was not found."));
         }
@@ -59,8 +58,7 @@ public static class HttpResponseMessageExtensions
     {
         var envelope = await response.Content.ReadFromJsonAsync<Envelope>(cancellationToken: ct);
 
-        if (!string.IsNullOrWhiteSpace(envelope?.ErrorMessage) 
-            && envelope.ErrorMessage.Contains("not found", StringComparison.OrdinalIgnoreCase))
+        if (!string.IsNullOrWhiteSpace(envelope?.ErrorMessage) && envelope.ErrorMessage.Contains("not found", StringComparison.OrdinalIgnoreCase))
         {
             return Result.Fail(Error.NotFound("Not.Found", envelope.ErrorMessage ?? "Entity was not found."));
         }
