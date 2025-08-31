@@ -42,13 +42,7 @@ public class Result<T> : Result
 
     public T? Value
     {
-        get
-        {
-            if (!Success) throw new InvalidOperationException("Cannot fetch value on a failed result");
-
-            return _value;
-        }
-
+        get => !Success ? throw new InvalidOperationException("Cannot fetch value on a failed result") : _value;
         private init => _value = value;
     }
 

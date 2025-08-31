@@ -6,3 +6,9 @@ internal class Envelope<T>
     public string? ErrorMessage { get; init; }
     public required DateTime TimeGenerated { get; init; }
 }
+
+internal class Envelope
+{
+    public string? ErrorMessage { get; init; }
+    public required DateTime TimeGenerated { get; init; }
+}
