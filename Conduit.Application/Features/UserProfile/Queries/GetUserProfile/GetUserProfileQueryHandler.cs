@@ -16,15 +16,15 @@ public sealed class GetUserProfileQueryHandler(
     {
         try
         {
-            var userProfile = await userProfileProvider.GetUserProfile(request.ExclusiveConnectionId, cancellationToken);
-            if (userProfile is null)
-                return Result.Fail<GetUserProfileDto>(Error.NotFound("UserProfile not found"));
+            var profileResult = await userProfileProvider.GetUserProfile(request.ExclusiveConnectionId, cancellationToken);
+            if (!profileResult.Success) return Result.Fail<GetUserProfileDto>(profileResult.Error);
 
-            var connectionIds = await connectionIdProvider.GetConnectionIds(cancellationToken);
-
-            connectionIds = RemoveConnectionId(connectionIds, request.ExclusiveConnectionId);
+            var connectionIdsResult = await connectionIdProvider.GetConnectionIds(cancellationToken);
+            if (!connectionIdsResult.Success) return Result.Fail<GetUserProfileDto>(connectionIdsResult.Error);
             
-            var dto = new GetUserProfileDto(userProfile, connectionIds);
+            var connectionIds = RemoveConnectionId(connectionIdsResult.Value, request.ExclusiveConnectionId);
+
+            var dto = new GetUserProfileDto(profileResult.Value, connectionIds);
             return Result.Ok(dto);
         }
         catch (Exception ex)

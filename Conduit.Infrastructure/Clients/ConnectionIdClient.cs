@@ -1,6 +1,8 @@
 ﻿using System.Net.Http.Json;
 using Conduit.Application.Contracts.Providers;
+using Conduit.Domain.Common;
 using Conduit.Infrastructure.Constants;
+using Conduit.Infrastructure.Extensions;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
@@ -13,19 +15,18 @@ internal sealed class ConnectionIdClient(
 {
     private readonly HttpClient _client = clientFactory.CreateClient(ClientNames.ConnectionIdClient);
 
-    public async Task<IReadOnlyCollection<Guid>> GetConnectionIds(CancellationToken ct = default)
+    public async Task<Result<IReadOnlyCollection<Guid>>> GetConnectionIds(CancellationToken ct = default)
     {
         var response = await _client.GetAsync("device/connectionid", ct);
 
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("ConnectionIdClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return [];
+            return await response.ToFailureResultAsync<IReadOnlyCollection<Guid>>(ct);
         }
 
-        var envelope = await response.Content.ReadFromJsonAsync<Envelope<ConnectionIdsDto>>(cancellationToken: ct);
-
-        return envelope?.Result?.ConnectionIds ?? [];
+        var value = await response.GetValueFromEnvelopeAsync<ConnectionIdsDto>(ct: CancellationToken.None);
+        return Result.Ok(value.ConnectionIds);
     }
 
     public async Task<Dictionary<Guid, IReadOnlyCollection<Guid>>> GetConnectionIds(IReadOnlyCollection<Guid> userIds,
