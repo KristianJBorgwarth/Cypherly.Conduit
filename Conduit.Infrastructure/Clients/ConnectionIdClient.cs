@@ -15,7 +15,7 @@ internal sealed class ConnectionIdClient(
 
     public async Task<IReadOnlyCollection<Guid>> GetConnectionIds(CancellationToken ct = default)
     {
-        var response = await _client.GetAsync("/connectionId", ct);
+        var response = await _client.GetAsync("device/connectionid", ct);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -31,7 +31,7 @@ internal sealed class ConnectionIdClient(
     public async Task<Dictionary<Guid, IReadOnlyCollection<Guid>>> GetConnectionIds(IReadOnlyCollection<Guid> userIds,
         CancellationToken ct = default)
     {
-        var response = await _client.GetAsync("/connectionIds", ct);
+        var response = await _client.GetAsync("devices/connectionids", ct);
 
         if (!response.IsSuccessStatusCode)
         {
