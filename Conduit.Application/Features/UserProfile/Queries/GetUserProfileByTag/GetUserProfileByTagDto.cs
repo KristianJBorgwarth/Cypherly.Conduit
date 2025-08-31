@@ -1,4 +1,4 @@
-using Conduit.Application.Dtos;
+using Conduit.Application.Features.Friends.Dtos;
 using Conduit.Domain.Enums;
 // ReSharper disable ConvertToPrimaryConstructor
 
