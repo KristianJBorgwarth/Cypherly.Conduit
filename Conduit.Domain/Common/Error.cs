@@ -24,12 +24,12 @@ public sealed record Error
         return new Error(code, ErrorType.Unauthorized, description);
     }
 
-    public static Error? Validation(string description)
+    public static Error Validation(string description)
     {
         return new Error("Error.Validation", ErrorType.Validation, description);
     }
 
-    public static Error? Failure(string? code, string description)
+    public static Error Failure(string code, string description)
     {
         return new Error(code, ErrorType.Failure, description);
     }

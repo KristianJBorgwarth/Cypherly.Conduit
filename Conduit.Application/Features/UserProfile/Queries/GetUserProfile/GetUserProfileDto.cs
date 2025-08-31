@@ -2,7 +2,7 @@
 
 // ReSharper disable ConvertToPrimaryConstructor
 // ReSharper disable UnusedAutoPropertyAccessor.Global
-namespace Conduit.Application.Features.UserProfile.Queries;
+namespace Conduit.Application.Features.UserProfile.Queries.GetUserProfile;
 
 public sealed class GetUserProfileDto
 {

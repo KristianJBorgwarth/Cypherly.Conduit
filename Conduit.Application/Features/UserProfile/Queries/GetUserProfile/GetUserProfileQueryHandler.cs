@@ -3,7 +3,7 @@ using Conduit.Application.Contracts.Providers;
 using Conduit.Domain.Common;
 using Microsoft.Extensions.Logging;
 
-namespace Conduit.Application.Features.UserProfile.Queries;
+namespace Conduit.Application.Features.UserProfile.Queries.GetUserProfile;
 
 public sealed class GetUserProfileQueryHandler(
     IUserProfileProvider userProfileProvider,
