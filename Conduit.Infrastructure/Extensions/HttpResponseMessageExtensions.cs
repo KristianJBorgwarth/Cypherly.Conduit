@@ -35,6 +35,12 @@ public static class HttpResponseMessageExtensions
             _ => Result.Fail(Error.Failure("Internal.Server.Error", "An unknown error occured calling downstream service."))
         };
     }
+
+    public static async Task<T> GetValueFromEnvelopeAsync<T>(this HttpResponseMessage response, CancellationToken ct = default)
+    {
+        var envelope = await response.Content.ReadFromJsonAsync<Envelope<T>>(cancellationToken: ct);
+        return envelope is not null ? envelope.Result : throw new InvalidOperationException("Response content cannot be null for a successful result.");
+    }
     
     private static async Task<Result<T>> HandleBadRequest<T>(HttpResponseMessage response, CancellationToken ct)
     {

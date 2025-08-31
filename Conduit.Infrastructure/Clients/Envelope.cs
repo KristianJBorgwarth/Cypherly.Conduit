@@ -2,7 +2,7 @@
 
 internal class Envelope<T>
 {
-    public T? Result { get; init; }
+    public T Result { get; init; } = default!;
     public string? ErrorMessage { get; init; }
     public required DateTime TimeGenerated { get; init; }
 }

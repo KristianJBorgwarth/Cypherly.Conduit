@@ -40,16 +40,17 @@ public class Result<T> : Result
 {
     private readonly T? _value;
 
-    public T? Value
+    public T Value
     {
-        get => !Success ? throw new InvalidOperationException("Cannot fetch value on a failed result") : _value;
+        get => !Success ? throw new InvalidOperationException("Cannot fetch Value on a failed Result") : _value!;
         private init => _value = value;
     }
 
     protected internal Result(T? value, bool success, Error? error)
         : base(success, error)
     {
-        Value = value;
+        if (success && value is null) throw new ArgumentNullException(nameof(value), "Successful Result must have a non-null Value");
+        Value = value!;
     }
 
     public static implicit operator Result<T>(T from)
