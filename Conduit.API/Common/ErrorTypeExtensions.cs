@@ -8,10 +8,11 @@ public static class ErrorTypeExtensions
     {
         return errorType switch
         {
-            ErrorType.Bad => StatusCodes.Status500InternalServerError,
+            ErrorType.Failure => StatusCodes.Status500InternalServerError,
             ErrorType.Validation => StatusCodes.Status400BadRequest,
             ErrorType.NotFound => StatusCodes.Status404NotFound,
             ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
+            ErrorType.BadRequest => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError
         };
     }
@@ -20,11 +21,11 @@ public static class ErrorTypeExtensions
     {
         return errorType switch
         {
-            ErrorType.Bad => "Bad Request",
+            ErrorType.Failure => "Internal Server Error",
             ErrorType.Validation => "Bad Request",
             ErrorType.NotFound => "Not Found",
             ErrorType.Unauthorized => "Unauthorized",
-            ErrorType.NoContent => "No Content",
+            ErrorType.BadRequest => "Bad Request",
             _ => "Internal Server Error"
         };
     }
@@ -34,10 +35,10 @@ public static class ErrorTypeExtensions
         return errorType switch
         {
             ErrorType.Validation => "https://tools.ietf.org/html/rfc7231#section-6.5.1", // 400
-            ErrorType.Bad => "https://tools.ietf.org/html/rfc7231#section-6.5.1",    // 400
+            ErrorType.Failure => "https://tools.ietf.org/html/rfc7231#section-6.5.1",    // 400
             ErrorType.NotFound => "https://tools.ietf.org/html/rfc7231#section-6.5.4",   // 404
             ErrorType.Unauthorized => "https://tools.ietf.org/html/rfc7235#section-3.1", // 401
-            ErrorType.NoContent => "https://tools.ietf.org/html/rfc7231#section-6.5.7", // 204
+            ErrorType.BadRequest => "https://tools.ietf.org/html/rfc7231#section-6.5.1",  // 400
             _ => "https://tools.ietf.org/html/rfc7231#section-6.6.1", // 500
         };
     }
