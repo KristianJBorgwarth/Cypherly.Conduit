@@ -1,6 +1,7 @@
 using Conduit.API.Common;
 using Conduit.API.Requests;
 using Conduit.Application.Features.Friends.Commands.Create;
+using Conduit.Application.Features.Friends.Queries.GetFriendRequests;
 using Conduit.Application.Features.Friends.Queries.GetFriends;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -32,5 +33,15 @@ public sealed class FriendsEndpoints : IEndpoint
             .Accepts<CreateFriendshipRequest>("application/json")
             .Produces(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest);
+        
+        group.MapGet("/requests", async ([FromServices] ISender sender) =>
+        {
+            var result = await sender.Send(new GetFriendRequestsQuery());
+            if (!result.Success) return result.ToProblemDetails();
+            return result.Value?.Count > 0 ? Results.Ok(result.Value) : Results.NoContent();
+        })
+        .Produces<IReadOnlyCollection<GetFriendRequestsDto>>()
+        .Produces(StatusCodes.Status204NoContent)
+        .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 }
