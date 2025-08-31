@@ -12,12 +12,12 @@ public sealed class GetUserProfileByTagDto
     public string? ProfilePictureUrl { get; private init; }
     public FriendshipStatusDto FriendshipStatus { get; private init; }
 
-    public GetUserProfileByTagDto(string username, string userTag, string? displayName, string? profilePictureUrl, FriendshipStatus status, FriendshipDirection direction)
+    public GetUserProfileByTagDto(string username, string userTag, string? displayName, string? profilePictureUrl, FriendshipStatusDto friendshipStatus)
     {
         Username = username;
         UserTag = userTag;
         DisplayName = displayName;
         ProfilePictureUrl = profilePictureUrl;
-        FriendshipStatus = new FriendshipStatusDto(status, direction);
+        FriendshipStatus = friendshipStatus;
     }
 }
