@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net;
+using System.Net.Http.Json;
 using Conduit.Application.Contracts.Providers;
 using Conduit.Application.Features.UserProfile.Queries.GetUserProfileByTag;
 using Conduit.Domain.Common;
@@ -40,6 +41,9 @@ internal sealed class UserProfileClient(
             logger.LogError("Failed to get user profile by tag: {ResponseReasonPhrase}", response.ReasonPhrase); 
             return await response.ToFailureResultAsync<GetUserProfileByTagDto>(ct: cancellationToken);
         }
+
+        if (response.StatusCode == HttpStatusCode.NoContent) 
+            return Result.Ok<GetUserProfileByTagDto>();
         
         return await response.GetValueFromEnvelopeAsync<GetUserProfileByTagDto>(ct: cancellationToken);
     }

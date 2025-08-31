@@ -6,7 +6,6 @@ using Conduit.Application.Features.Friends.Queries.GetFriendRequests;
 using Conduit.Application.Features.Friends.Queries.GetFriends;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OpenTelemetry.Trace;
 
 namespace Conduit.API.Endpoints;
 
