@@ -27,18 +27,25 @@ public class ValidationBehavior<TRequest, TResponse>(
 
         var error = Error.Validation("Validation failed: " + errorMessage);
 
-        if (typeof(TResponse).IsGenericType && typeof(TResponse).GetGenericTypeDefinition() == typeof(Result<>))
-        {
-            logger.LogWarning("Validation failed: {ErrorMessage}", errorMessage);
-
-            var genericType = typeof(TResponse).GetGenericArguments()[0];
-            var failMethod = typeof(Result)
-                .GetMethod(nameof(Result.Fail))!
-                .MakeGenericMethod(genericType);
-
-            return (TResponse)failMethod.Invoke(null, [error])!;
-        }
-
+        return typeof(TResponse).IsGenericType && typeof(TResponse).GetGenericTypeDefinition() == typeof(Result<>)
+            ? CreateGenericFailResponse(error)
+            : CreateFailResponse(error);
+    }
+    
+    private static TResponse CreateFailResponse(Error error)
+    {
         return (TResponse)Result.Fail(error);
     }
+    
+    private static TResponse CreateGenericFailResponse(Error error)
+    {
+        var resultType = typeof(TResponse).GetGenericArguments()[0];
+        var method = typeof(Result).GetMethods()
+            .FirstOrDefault(m => m is { Name: "Fail", IsGenericMethodDefinition: true })!;
+
+        var genericFailMethod = method.MakeGenericMethod(resultType);
+        return (TResponse)genericFailMethod.Invoke(null, [error])!;
+    }
+    
+    
 }
