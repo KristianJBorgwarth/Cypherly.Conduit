@@ -16,13 +16,13 @@ public sealed class GetFriendsQueryHandler(
     {
         try
         {
-            var friends = await friendProvider.GetFriendsAsync(ct);
-            if (friends.Count is 0) return Array.Empty<GetFriendsDto>();
+            var friendsResult = await friendProvider.GetFriendsAsync(ct);
+            if(!friendsResult.Success) return Result.Fail<IReadOnlyCollection<GetFriendsDto>>(friendsResult.Error);
             
-            var friendIds = friends.Select(f => f.Id).ToList();
+            var friendIds = friendsResult.RequiredValue.Select(f => f.Id).ToList();
             var connectionIds = await connectionIdProvider.GetConnectionIds(friendIds, ct);
             
-            var dtos = MapToDtos(friends, connectionIds);
+            var dtos = MapToDtos(friendsResult.RequiredValue, connectionIds);
 
             return dtos;
         }

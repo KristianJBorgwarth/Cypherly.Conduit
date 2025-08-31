@@ -6,8 +6,8 @@ namespace Conduit.Application.Contracts.Providers;
 
 public interface IFriendProvider
 {
-    Task CreateFriendshipAsync(string friendTag, CancellationToken ct = default);
-    Task<IReadOnlyCollection<Friend>> GetFriendsAsync(CancellationToken ct = default);
-    Task<IReadOnlyCollection<GetFriendRequestsDto>> GetFriendRequestsAsync(CancellationToken ct = default);
+    Task<Result> CreateFriendshipAsync(string friendTag, CancellationToken ct = default);
+    Task<Result<IReadOnlyCollection<Friend>>> GetFriendsAsync(CancellationToken ct = default);
+    Task<Result<IReadOnlyCollection<GetFriendRequestsDto>>> GetFriendRequestsAsync(CancellationToken ct = default);
     Task<Result> DeleteFriendshipAsync(string friendTag, CancellationToken ct = default);
 }   

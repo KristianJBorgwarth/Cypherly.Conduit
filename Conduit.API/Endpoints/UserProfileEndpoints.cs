@@ -18,7 +18,7 @@ public sealed class UserProfileEndpoints : IEndpoint
         group.MapGet("/", async ([FromServices] ISender sender, [FromQuery] Guid exclusiveConnectionId) =>
             {
                 var result = await sender.Send(new GetUserProfileQuery { ExclusiveConnectionId = exclusiveConnectionId });
-                return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
+                return result.Success ? Results.Ok(result.RequiredValue) : result.ToProblemDetails();
             })
             .Produces<GetUserProfileDto>()
             .ProducesProblem(StatusCodes.Status404NotFound);
@@ -28,7 +28,7 @@ public sealed class UserProfileEndpoints : IEndpoint
                 var result = await sender.Send(new GetUserProfileByTagQuery { UserTag = tag });
                 if (!result.Success) return result.ToProblemDetails();
                 
-                return result.Value != null ? Results.Ok(result.Value) : Results.NoContent();
+                return result.Value is null ? Results.Ok(result.Value) : Results.NoContent();
             })
             .Produces<GetUserProfileByTagDto>()
             .Produces(StatusCodes.Status204NoContent)

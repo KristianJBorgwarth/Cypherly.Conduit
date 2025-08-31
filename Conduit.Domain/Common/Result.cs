@@ -39,18 +39,32 @@ public class Result
 public class Result<T> : Result
 {
     private readonly T? _value;
-
-    public T Value
+    
+    /// <summary>
+    /// Gets the value of the Result if it is successful; otherwise, throws an InvalidOperationException.
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    public T? Value => !Success ? throw new InvalidOperationException("Cannot fetch Value on a failed Result") : _value;
+    
+    /// <summary>
+    /// Gets the value of the Result, throwing an InvalidOperationException if the value is null.
+    /// I.e. use this when you are sure the value is not null.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">In case of accessing failed result</exception>
+    /// <exception cref="NullReferenceException">In case of null _value</exception>
+    public T RequiredValue
     {
-        get => !Success ? throw new InvalidOperationException("Cannot fetch Value on a failed Result") : _value!;
-        private init => _value = value;
+        get
+        {
+            if(!Success) throw new InvalidOperationException("Cannot fetch RequiredValue on a failed Result");
+            return _value ?? throw new NullReferenceException($"RequiredValue is null of type {typeof(T).FullName}");
+        }
     }
-
+    
     protected internal Result(T? value, bool success, Error? error)
         : base(success, error)
     {
-        if (success && value is null) throw new ArgumentNullException(nameof(value), "Successful Result must have a non-null Value");
-        Value = value!;
+        _value = value;
     }
 
     public static implicit operator Result<T>(T from)

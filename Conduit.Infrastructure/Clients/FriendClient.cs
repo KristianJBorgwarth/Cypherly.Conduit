@@ -1,3 +1,8 @@
+
+
+// ReSharper disable InvertIf
+
+using System.Net;
 using System.Net.Http.Json;
 using Conduit.Application.Contracts.Providers;
 using Conduit.Application.Features.Friends.Queries.GetFriendRequests;
@@ -16,34 +21,40 @@ internal sealed class FriendClient(
 {
     private readonly HttpClient _client = clientFactory.CreateClient(ClientNames.UserProfileClient);
     
-    public async Task<IReadOnlyCollection<Friend>> GetFriendsAsync(CancellationToken ct = default)
+    public async Task<Result<IReadOnlyCollection<Friend>>> GetFriendsAsync(CancellationToken ct = default)
     {
         var response = await _client.GetAsync("friendships", ct);
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("FriendClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return [];
+            return await response.ToFailureResultAsync<IReadOnlyCollection<Friend>>(ct);
         }
-        var envelope = await response.Content.ReadFromJsonAsync<Envelope<Friend[]>>(cancellationToken: ct);
-        return envelope?.Result ?? [];
+
+        if (response.StatusCode == HttpStatusCode.NoContent) return Result.Ok<IReadOnlyCollection<Friend>>([]);
+        return await response.GetValueFromEnvelopeAsync<Friend[]>(ct);
     }
     
-    public async Task CreateFriendshipAsync(string friendTag, CancellationToken ct = default)
+    public async Task<Result> CreateFriendshipAsync(string friendTag, CancellationToken ct = default)
     {
         var response = await _client.PostAsJsonAsync("friendship", new { FriendTag = friendTag }, ct);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("FriendClient failed with status code {ResponseStatusCode}", response.StatusCode);
+            return await response.ToFailureResultAsync(ct);
+        }
+        return Result.Ok();
     }
     
-    public async Task<IReadOnlyCollection<GetFriendRequestsDto>> GetFriendRequestsAsync(CancellationToken ct = default)
+    public async Task<Result<IReadOnlyCollection<GetFriendRequestsDto>>> GetFriendRequestsAsync(CancellationToken ct = default)
     {
         var response = await _client.GetAsync("friendship/requests", ct);
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("FriendClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return [];
+            return await response.ToFailureResultAsync<IReadOnlyCollection<GetFriendRequestsDto>>(ct);
         }
-        var envelope = await response.Content.ReadFromJsonAsync<Envelope<GetFriendRequestsDto[]>>(cancellationToken: ct);
-        return envelope?.Result ?? [];
+        if (response.StatusCode == HttpStatusCode.NoContent) return Result.Ok<IReadOnlyCollection<GetFriendRequestsDto>>([]);
+        return await response.GetValueFromEnvelopeAsync<GetFriendRequestsDto[]>(ct);
     }
 
     public async Task<Result> DeleteFriendshipAsync(string friendTag, CancellationToken ct = default)

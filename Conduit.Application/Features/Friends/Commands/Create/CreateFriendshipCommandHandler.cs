@@ -14,8 +14,7 @@ public sealed class CreateFriendshipCommandHandler(
     {
         try
         {
-            await friendProvider.CreateFriendshipAsync(request.FriendTag, cancellationToken);
-            return Result.Ok();
+            return await friendProvider.CreateFriendshipAsync(request.FriendTag, cancellationToken);
         }
         catch (Exception ex)
         {

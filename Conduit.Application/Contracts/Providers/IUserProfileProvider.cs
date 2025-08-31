@@ -7,5 +7,5 @@ namespace Conduit.Application.Contracts.Providers;
 public interface IUserProfileProvider
 {
     public Task<Result<UserProfile>> GetUserProfile(Guid exclusiveConnectionId, CancellationToken cancellationToken = default);
-    public Task<GetUserProfileByTagDto?> GetUserProfileByTag(string userTag, CancellationToken cancellationToken = default);
+    public Task<Result<GetUserProfileByTagDto>> GetUserProfileByTag(string userTag, CancellationToken cancellationToken = default);
 }
