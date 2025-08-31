@@ -1,4 +1,5 @@
 using Conduit.API.Common;
+using Conduit.API.Requests;
 using Conduit.Application.Features.Friends.Commands.Create;
 using Conduit.Application.Features.Friends.Queries.GetFriends;
 using MediatR;
@@ -23,11 +24,12 @@ public sealed class FriendsEndpoints : IEndpoint
             return result.Value?.Count > 0 ? Results.Ok(result.Value) : Results.NoContent();
         });
 
-        group.MapPost("", async ([FromServices] ISender sender, [FromBody] string friendTag) =>
+        group.MapPost("", async ([FromServices] ISender sender, [FromBody] CreateFriendshipRequest req) =>
             {
-                var result = await sender.Send(new CreateFriendshipCommand { FriendTag = friendTag });
+                var result = await sender.Send(new CreateFriendshipCommand { FriendTag = req.FriendTag });
                 return result.Success ? Results.Ok() : result.ToProblemDetails();
             })
+            .Accepts<CreateFriendshipRequest>("application/json")
             .Produces(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
