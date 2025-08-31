@@ -1,7 +1,6 @@
 ﻿using Conduit.API.Common;
 using Conduit.Application.Features.UserProfile.Queries.GetUserProfile;
 using Conduit.Application.Features.UserProfile.Queries.GetUserProfileByTag;
-using Conduit.Domain.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
