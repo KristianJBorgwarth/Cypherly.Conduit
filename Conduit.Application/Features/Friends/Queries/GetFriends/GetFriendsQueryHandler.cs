@@ -20,9 +20,10 @@ public sealed class GetFriendsQueryHandler(
             if(!friendsResult.Success) return Result.Fail<IReadOnlyCollection<GetFriendsDto>>(friendsResult.Error);
             
             var friendIds = friendsResult.RequiredValue.Select(f => f.Id).ToList();
-            var connectionIds = await connectionIdProvider.GetConnectionIds(friendIds, ct);
+            var conIdsResult = await connectionIdProvider.GetConnectionIds(friendIds, ct);
+            if(!conIdsResult.Success) return Result.Fail<IReadOnlyCollection<GetFriendsDto>>(conIdsResult.Error);
             
-            var dtos = MapToDtos(friendsResult.RequiredValue, connectionIds);
+            var dtos = MapToDtos(friendsResult.RequiredValue, conIdsResult.RequiredValue);
 
             return dtos;
         }

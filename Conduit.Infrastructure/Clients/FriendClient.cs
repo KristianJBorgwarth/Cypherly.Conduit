@@ -1,5 +1,3 @@
-
-
 // ReSharper disable InvertIf
 
 using System.Net;

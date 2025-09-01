@@ -28,7 +28,7 @@ internal sealed class ConnectionIdClient(
         return Result.Ok(value.ConnectionIds);
     }
 
-    public async Task<Dictionary<Guid, IReadOnlyCollection<Guid>>> GetConnectionIds(IReadOnlyCollection<Guid> userIds,
+    public async Task<Result<Dictionary<Guid, IReadOnlyCollection<Guid>>>> GetConnectionIds(IReadOnlyCollection<Guid> userIds,
         CancellationToken ct = default)
     {
         var response = await _client.GetAsync("devices/connectionids", ct);
@@ -36,11 +36,11 @@ internal sealed class ConnectionIdClient(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("ConnectionIdClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return new Dictionary<Guid, IReadOnlyCollection<Guid>>();
+            return await response.ToFailureResultAsync<Dictionary<Guid, IReadOnlyCollection<Guid>>>(ct);
         }
-
-        var envelope = await response.Content.ReadFromJsonAsync<Envelope<MultipleConnectionIds>>(cancellationToken: ct);
-        return envelope?.Result?.ConnectionIds ?? new Dictionary<Guid, IReadOnlyCollection<Guid>>();
+        
+        var value = await response.GetValueFromEnvelopeAsync<MultipleConnectionIds>(ct: CancellationToken.None);
+        return Result.Ok(value.ConnectionIds);
     }
 
     private sealed record ConnectionIdsDto(IReadOnlyCollection<Guid> ConnectionIds);
