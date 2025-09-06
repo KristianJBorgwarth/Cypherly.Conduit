@@ -1,4 +1,5 @@
 ﻿using Conduit.API.Common;
+using Conduit.Application.Features.UserProfile.Commands.UpdateProfilePicture;
 using Conduit.Application.Features.UserProfile.Queries.GetUserProfile;
 using Conduit.Application.Features.UserProfile.Queries.GetUserProfileByTag;
 using MediatR;
@@ -33,5 +34,15 @@ public sealed class UserProfileEndpoints : IEndpoint
             .Produces<GetUserProfileByTagDto>()
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status400BadRequest);
+        
+        group.MapPost("profile-picture", async ([FromServices] ISender sender, [FromForm] IFormFile newProfilePicture, [FromQuery] Guid tenantId) =>
+            {
+                var result = await sender.Send(new UpdateProfilePictureCommand { NewProfilePicture = newProfilePicture });
+                return result.Success ? Results.Ok(result.RequiredValue) : result.ToProblemDetails();
+            })
+            .Produces<UpdateProfilePictureDto>()
+            .Accepts<IFormFile>("multipart/form-data")
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status415UnsupportedMediaType);
     }
 }

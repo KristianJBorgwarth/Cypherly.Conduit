@@ -18,8 +18,8 @@ public static class HttpResponseMessageExtensions
             HttpStatusCode.BadRequest => await HandleBadRequest<T>(response, ct),
             HttpStatusCode.NotFound   => await HandleNotFound<T>(response, ct),
             HttpStatusCode.Unauthorized => Result.Fail<T>(Error.Unauthorized("Unauthorized", "Request requires user authentication.")),
-            HttpStatusCode.InternalServerError => Result.Fail<T>(Error.Failure("Internal.Server.Error", "An internal server error occurred calling downstream service.")),
-            _ => Result.Fail<T>(Error.Failure("Internal.Server.Error", "An unknown error occured calling downstream service."))
+            HttpStatusCode.InternalServerError => Result.Fail<T>(Error.Failure("An internal server error occurred calling downstream service.")),
+            _ => Result.Fail<T>(Error.Failure("An unknown error occured calling downstream service."))
         };
     }
 
@@ -31,8 +31,8 @@ public static class HttpResponseMessageExtensions
             HttpStatusCode.BadRequest => await HandleBadRequest(response, ct),
             HttpStatusCode.NotFound => await HandleNotFound(response, ct),
             HttpStatusCode.Unauthorized => Result.Fail(Error.Unauthorized("Unauthorized", "Request requires user authentication.")),
-            HttpStatusCode.InternalServerError => Result.Fail(Error.Failure("Internal.Server.Error", "An internal server error occurred calling downstream service.")),
-            _ => Result.Fail(Error.Failure("Internal.Server.Error", "An unknown error occured calling downstream service."))
+            HttpStatusCode.InternalServerError => Result.Fail(Error.Failure("An internal server error occurred calling downstream service.")),
+            _ => Result.Fail(Error.Failure("An unknown error occured calling downstream service."))
         };
     }
 
