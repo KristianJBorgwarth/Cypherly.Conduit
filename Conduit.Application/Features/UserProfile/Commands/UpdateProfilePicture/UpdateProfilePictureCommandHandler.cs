@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 namespace Conduit.Application.Features.UserProfile.Commands.UpdateProfilePicture;
 
 public sealed class UpdateProfilePictureCommandHandler(
-    IUserProfileProvider profileProvider,
+    IUserProfileSettingsProvider userProfileSettingsProvider,
     ILogger<UpdateProfilePictureCommandHandler> logger)
     : ICommandHandler<UpdateProfilePictureCommand, UpdateProfilePictureDto>
 {
@@ -15,7 +15,7 @@ public sealed class UpdateProfilePictureCommandHandler(
     {
         try
         {
-            return await profileProvider.UpdateProfilePicture(request.NewProfilePicture, cancellationToken);
+            return await userProfileSettingsProvider.UpdateProfilePicture(request.NewProfilePicture, cancellationToken);
         }
         catch (Exception ex)
         {

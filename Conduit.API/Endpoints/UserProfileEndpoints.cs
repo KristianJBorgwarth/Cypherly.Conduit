@@ -1,4 +1,5 @@
 ﻿using Conduit.API.Common;
+using Conduit.Application.Features.UserProfile.Commands.TogglePrivacy;
 using Conduit.Application.Features.UserProfile.Commands.UpdateProfilePicture;
 using Conduit.Application.Features.UserProfile.Queries.GetUserProfile;
 using Conduit.Application.Features.UserProfile.Queries.GetUserProfileByTag;
@@ -44,5 +45,13 @@ public sealed class UserProfileEndpoints : IEndpoint
             .Accepts<IFormFile>("multipart/form-data")
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status415UnsupportedMediaType);
+
+        group.MapPost("toggle-privacy", async ([FromServices] ISender sender, [FromBody] bool isPrivate) =>
+            {
+                var result = await sender.Send(new TogglePrivacyCommand { IsPrivate = isPrivate });
+                return result.Success ? Results.Ok() : result.ToProblemDetails();
+            })
+            .Produces(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 }
