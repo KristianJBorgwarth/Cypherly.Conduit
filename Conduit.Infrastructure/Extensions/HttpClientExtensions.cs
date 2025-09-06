@@ -24,6 +24,7 @@ internal static class HttpClientExtensions
 
         // Services
         services.AddScoped<IUserProfileProvider, UserProfileClient>();
+        services.AddScoped<IUserProfileSettingsProvider, UserProfileSettingsClient>();
         services.AddScoped<IFriendProvider, FriendClient>();
         services.AddScoped<IConnectionIdProvider, ConnectionIdClient>();
     }
