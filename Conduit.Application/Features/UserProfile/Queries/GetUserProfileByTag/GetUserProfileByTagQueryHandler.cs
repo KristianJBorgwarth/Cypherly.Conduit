@@ -20,7 +20,7 @@ public sealed class GetUserProfileByTagQueryHandler(
         catch (Exception ex)
         {
             logger.LogError(ex, "Error occurred while getting user profile by tag: {Message}", ex.Message);
-            return Result.Fail<GetUserProfileByTagDto>(Error.Failure("internal.server.error", "An exception occurred while processing the request."));
+            return Result.Fail<GetUserProfileByTagDto>(Error.Failure("An exception occurred while processing the request."));
         }
     }
 }

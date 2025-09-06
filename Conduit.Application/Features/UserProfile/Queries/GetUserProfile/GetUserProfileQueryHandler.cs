@@ -30,7 +30,7 @@ public sealed class GetUserProfileQueryHandler(
         catch (Exception ex)
         {
             logger.LogError(ex, "An exception occured while retrieving user profile for Tenant");
-            return Result.Fail<GetUserProfileDto>(Error.Failure("internal.server.error", "An unexpected error occured"));
+            return Result.Fail<GetUserProfileDto>(Error.Failure("An unexpected error occured"));
         }
     }
 

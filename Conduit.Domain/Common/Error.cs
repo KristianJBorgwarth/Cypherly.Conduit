@@ -26,12 +26,12 @@ public sealed record Error
 
     public static Error Validation(string description)
     {
-        return new Error("Error.Validation", ErrorType.Validation, description);
+        return new Error("validation.error", ErrorType.Validation, description);
     }
 
-    public static Error Failure(string code, string description)
+    public static Error Failure(string description)
     {
-        return new Error(code, ErrorType.Failure, description);
+        return new Error("internal.server.error", ErrorType.Failure, description);
     }
     
     public static Error BadRequest(string code, string description)
