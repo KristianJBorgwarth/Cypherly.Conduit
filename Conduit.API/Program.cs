@@ -41,6 +41,18 @@ builder.Services.AddSecurity(configuration);
 builder.Services.AddEndpoints();
 builder.Services.AddOpenApi();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowElectron", policy =>
+    {
+        var allowedOrigins = configuration.GetSection("AllowedOrigins").Get<string[]>();
+        policy.WithOrigins(allowedOrigins!)
+            .AllowAnyMethod()
+            .AllowCredentials()
+            .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 app.MapOpenApi();
@@ -54,9 +66,15 @@ app.MapScalarApiReference(options =>
 
 
 app.UseHttpsRedirection();
+
 app.UseAuthentication();
+
+app.UseCors("AllowElectron");
+
 app.UseAuthorization();
+
 app.UseHeaderPropagation();
+
 app.RegisterMinimalEndpoints();
 
 if (env.IsProduction())
