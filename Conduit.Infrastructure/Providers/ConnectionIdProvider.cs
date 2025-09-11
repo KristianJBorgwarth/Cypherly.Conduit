@@ -1,16 +1,14 @@
-﻿using System.Net.Http.Json;
-using Conduit.Application.Contracts.Providers;
+﻿using Conduit.Application.Contracts.Providers;
 using Conduit.Domain.Common;
 using Conduit.Infrastructure.Constants;
 using Conduit.Infrastructure.Extensions;
-using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
-namespace Conduit.Infrastructure.Clients;
+namespace Conduit.Infrastructure.Providers;
 
-internal sealed class ConnectionIdClient(
+internal sealed class ConnectionIdProvider(
     IHttpClientFactory clientFactory,
-    ILogger<ConnectionIdClient> logger)
+    ILogger<ConnectionIdProvider> logger)
     : IConnectionIdProvider
 {
     private readonly HttpClient _client = clientFactory.CreateClient(ClientNames.ConnectionIdClient);

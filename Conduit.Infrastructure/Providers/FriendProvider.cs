@@ -10,11 +10,11 @@ using Conduit.Infrastructure.Constants;
 using Conduit.Infrastructure.Extensions;
 using Microsoft.Extensions.Logging;
 
-namespace Conduit.Infrastructure.Clients;
+namespace Conduit.Infrastructure.Providers;
 
-internal sealed class FriendClient(
+internal sealed class FriendProvider(
     IHttpClientFactory clientFactory,
-    ILogger<FriendClient> logger) 
+    ILogger<FriendProvider> logger) 
     : IFriendProvider
 {
     private readonly HttpClient _client = clientFactory.CreateClient(ClientNames.UserProfileClient);

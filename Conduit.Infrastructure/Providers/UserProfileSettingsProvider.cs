@@ -8,11 +8,11 @@ using Conduit.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Conduit.Infrastructure.Clients;
+namespace Conduit.Infrastructure.Providers;
 
-internal sealed class UserProfileSettingsClient(
+internal sealed class UserProfileSettingsProvider(
     IHttpClientFactory factory,
-    ILogger<UserProfileSettingsClient> logger) 
+    ILogger<UserProfileSettingsProvider> logger) 
     : IUserProfileSettingsProvider
 {
     private readonly HttpClient _client = factory.CreateClient(ClientNames.UserProfileClient);

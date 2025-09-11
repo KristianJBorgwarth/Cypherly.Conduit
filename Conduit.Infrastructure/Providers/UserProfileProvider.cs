@@ -6,13 +6,14 @@ using Conduit.Domain.Models;
 using Conduit.Infrastructure.Constants;
 using Conduit.Infrastructure.Extensions;
 using Microsoft.Extensions.Logging;
+
 // ReSharper disable InvertIf
 
-namespace Conduit.Infrastructure.Clients;
+namespace Conduit.Infrastructure.Providers;
 
-internal sealed class UserProfileClient(
+internal sealed class UserProfileProvider(
     IHttpClientFactory factory,
-    ILogger<UserProfileClient> logger) 
+    ILogger<UserProfileProvider> logger) 
     : IUserProfileProvider
 {
     private readonly HttpClient _client = factory.CreateClient(ClientNames.UserProfileClient);

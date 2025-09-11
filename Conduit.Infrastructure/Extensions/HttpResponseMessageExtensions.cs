@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using Conduit.Domain.Common;
-using Conduit.Infrastructure.Clients;
+using Conduit.Infrastructure.Providers;
 
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 
@@ -76,5 +76,18 @@ public static class HttpResponseMessageExtensions
     {
         var envelope = await response.Content.ReadFromJsonAsync<Envelope>(cancellationToken: ct);
         return Result.Fail(Error.NotFound("Not.Found", envelope?.ErrorMessage ?? "Entity was not found."));
+    }
+    
+    internal class Envelope<T>
+    {
+        public T Result { get; init; } = default!;
+        public string? ErrorMessage { get; init; }
+        public required DateTime TimeGenerated { get; init; }
+    }
+
+    internal class Envelope
+    {
+        public string? ErrorMessage { get; init; }
+        public required DateTime TimeGenerated { get; init; }
     }
 }

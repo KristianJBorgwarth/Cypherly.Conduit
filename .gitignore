@@ -4,4 +4,3 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 /.idea*
-Conduit.API/appsettings.Local.json

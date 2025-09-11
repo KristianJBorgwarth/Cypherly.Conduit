@@ -1,6 +1,6 @@
 ﻿using Conduit.Application.Contracts.Providers;
-using Conduit.Infrastructure.Clients;
 using Conduit.Infrastructure.Constants;
+using Conduit.Infrastructure.Providers;
 using Conduit.Infrastructure.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -31,11 +31,11 @@ internal static class HttpClientExtensions
     
     private static void RegisterProviders(this IServiceCollection services)
     {
-        services.AddScoped<IUserProfileProvider, UserProfileClient>();
-        services.AddScoped<IUserProfileSettingsProvider, UserProfileSettingsClient>();
-        services.AddScoped<IFriendProvider, FriendClient>();
-        services.AddScoped<IConnectionIdProvider, ConnectionIdClient>();
-        services.AddScoped<IIdentityProvider, AuthenticationClient>();
+        services.AddScoped<IUserProfileProvider, UserProfileProvider>();
+        services.AddScoped<IUserProfileSettingsProvider, UserProfileSettingsProvider>();
+        services.AddScoped<IFriendProvider, FriendProvider>();
+        services.AddScoped<IConnectionIdProvider, ConnectionIdProvider>();
+        services.AddScoped<IIdentityProvider, AuthenticationProvider>();
     }
 
     private static void AddHttpClient(this IServiceCollection services, DownstreamOptions options, string clientName)

@@ -6,11 +6,11 @@ using Conduit.Infrastructure.Constants;
 using Conduit.Infrastructure.Extensions;
 using Microsoft.Extensions.Logging;
 
-namespace Conduit.Infrastructure.Clients;
+namespace Conduit.Infrastructure.Providers;
 
-internal sealed class AuthenticationClient(
+internal sealed class AuthenticationProvider(
     IHttpClientFactory clientFactory,
-    ILogger<AuthenticationClient> logger) : IIdentityProvider
+    ILogger<AuthenticationProvider> logger) : IIdentityProvider
 {
     private readonly HttpClient _client = clientFactory.CreateClient(ClientNames.IdentityClient);
     
