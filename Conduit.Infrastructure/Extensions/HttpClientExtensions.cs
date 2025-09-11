@@ -18,15 +18,24 @@ internal static class HttpClientExtensions
         
         var downStreamOptions =services.BuildServiceProvider().GetRequiredService<IOptions<DownstreamOptions>>().Value;
         
-        // Clients
-        services.AddHttpClient(downStreamOptions, ClientNames.UserProfileClient);
-        services.AddHttpClient(downStreamOptions, ClientNames.ConnectionIdClient);
+        services.AddClients(downStreamOptions);
+        services.RegisterProviders();
+    }
 
-        // Services
+    private static void AddClients(this IServiceCollection services, DownstreamOptions options)
+    {
+        services.AddHttpClient(options, ClientNames.UserProfileClient);
+        services.AddHttpClient(options, ClientNames.ConnectionIdClient);
+        services.AddHttpClient(options, ClientNames.IdentityClient);
+    }
+    
+    private static void RegisterProviders(this IServiceCollection services)
+    {
         services.AddScoped<IUserProfileProvider, UserProfileClient>();
         services.AddScoped<IUserProfileSettingsProvider, UserProfileSettingsClient>();
         services.AddScoped<IFriendProvider, FriendClient>();
         services.AddScoped<IConnectionIdProvider, ConnectionIdClient>();
+        services.AddScoped<IIdentityProvider, AuthenticationClient>();
     }
 
     private static void AddHttpClient(this IServiceCollection services, DownstreamOptions options, string clientName)

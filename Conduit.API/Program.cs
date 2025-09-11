@@ -18,6 +18,7 @@ configuration
 if (env.IsDevelopment())
 {
     configuration.AddJsonFile($"appsettings.{Environments.Development}.json", true, true);
+    configuration.AddJsonFile("appsettings.Local.json", true, true);
     configuration.AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 }
 
