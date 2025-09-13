@@ -22,6 +22,7 @@ internal sealed class ConnectionIdProvider(
             logger.LogError("ConnectionIdClient failed with status code {ResponseStatusCode}", response.StatusCode);
             return await response.ToFailureResultAsync<IReadOnlyCollection<Guid>>(ct);
         }
+        
         var value = await response.GetValueFromEnvelopeAsync<ConnectionIdsDto>(ct: CancellationToken.None);
         return Result.Ok(value.ConnectionIds);
     }

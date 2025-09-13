@@ -17,7 +17,7 @@ public static class HttpResponseMessageExtensions
         {
             HttpStatusCode.BadRequest => await HandleBadRequest<T>(response, ct),
             HttpStatusCode.NotFound   => await HandleNotFound<T>(response, ct),
-            HttpStatusCode.Unauthorized => Result.Fail<T>(Error.Unauthorized("Unauthorized", "Request requires user authentication.")),
+            HttpStatusCode.Unauthorized => Result.Fail<T>(Error.Unauthorized("Request requires user authentication.")),
             HttpStatusCode.InternalServerError => Result.Fail<T>(Error.Failure("An internal server error occurred calling downstream service.")),
             _ => Result.Fail<T>(Error.Failure("An unknown error occured calling downstream service."))
         };
@@ -30,7 +30,7 @@ public static class HttpResponseMessageExtensions
         {
             HttpStatusCode.BadRequest => await HandleBadRequest(response, ct),
             HttpStatusCode.NotFound => await HandleNotFound(response, ct),
-            HttpStatusCode.Unauthorized => Result.Fail(Error.Unauthorized("Unauthorized", "Request requires user authentication.")),
+            HttpStatusCode.Unauthorized => Result.Fail(Error.Unauthorized("Request requires user authentication.")),
             HttpStatusCode.InternalServerError => Result.Fail(Error.Failure("An internal server error occurred calling downstream service.")),
             _ => Result.Fail(Error.Failure("An unknown error occured calling downstream service."))
         };
@@ -48,7 +48,7 @@ public static class HttpResponseMessageExtensions
 
         if (!string.IsNullOrWhiteSpace(envelope?.ErrorMessage) && envelope.ErrorMessage.Contains("not found", StringComparison.OrdinalIgnoreCase))
         {
-            return Result.Fail<T>(Error.NotFound("Not.Found", envelope.ErrorMessage ?? $"Entity of type {typeof(T).Name} was not found."));
+            return Result.Fail<T>(Error.NotFound(envelope.ErrorMessage ?? $"Entity of type {typeof(T).Name} was not found."));
         }
 
         return Result.Fail<T>(Error.BadRequest("Bad.Request", envelope?.ErrorMessage ?? "Bad request."));
@@ -60,7 +60,7 @@ public static class HttpResponseMessageExtensions
 
         if (!string.IsNullOrWhiteSpace(envelope?.ErrorMessage) && envelope.ErrorMessage.Contains("not found", StringComparison.OrdinalIgnoreCase))
         {
-            return Result.Fail(Error.NotFound("Not.Found", envelope.ErrorMessage ?? "Entity was not found."));
+            return Result.Fail(Error.NotFound(envelope.ErrorMessage));
         }
 
         return Result.Fail(Error.BadRequest("Bad.Request", envelope?.ErrorMessage ?? "Bad request."));
@@ -69,13 +69,13 @@ public static class HttpResponseMessageExtensions
     private static async Task<Result<T>> HandleNotFound<T>(HttpResponseMessage response, CancellationToken ct)
     {
         var envelope = await response.Content.ReadFromJsonAsync<Envelope>(cancellationToken: ct);
-        return Result.Fail<T>(Error.NotFound("Not.Found", envelope?.ErrorMessage ?? $"Entity of type {typeof(T).Name} was not found."));
+        return Result.Fail<T>(Error.NotFound<T>(envelope?.ErrorMessage ?? $"Entity of type {typeof(T).Name} was not found."));
     }
 
     private static async Task<Result> HandleNotFound(HttpResponseMessage response, CancellationToken ct)
     {
         var envelope = await response.Content.ReadFromJsonAsync<Envelope>(cancellationToken: ct);
-        return Result.Fail(Error.NotFound("Not.Found", envelope?.ErrorMessage ?? "Entity was not found."));
+        return Result.Fail(Error.NotFound(envelope?.ErrorMessage));
     }
     
     internal class Envelope<T>
