@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.API.Endpoints;
 
-public sealed class UserProfileEndpoints : IEndpoint
+internal sealed class UserProfileEndpoints : IEndpoint
 {
     public void MapRoutes(IEndpointRouteBuilder routeBuilder)
     {

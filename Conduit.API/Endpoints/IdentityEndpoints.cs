@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.API.Endpoints;
 
-public class IdentityEndpoints : IEndpoint
+internal sealed class IdentityEndpoints : IEndpoint
 {
     public void MapRoutes(IEndpointRouteBuilder routeBuilder)
     {
