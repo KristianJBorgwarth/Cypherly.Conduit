@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.API.Endpoints;
 
-public sealed class FriendsEndpoints : IEndpoint
+internal sealed class FriendsEndpoints : IEndpoint
 {
     public void MapRoutes(IEndpointRouteBuilder routeBuilder)
     {
