@@ -21,11 +21,12 @@ internal sealed class KeyProvider(
         int signedPrekeyId,
         byte[] signedPreKeyPublic,
         byte[] signedPreKeySignature,
+        IReadOnlyCollection<Domain.Models.PreKey> preKeys,
         DateTimeOffset signedPreKeyTimestamp,
         CancellationToken cancellationToken)
     {
         var response = await _client.PostAsJsonAsync(
-            "api/keys/",
+            "keys",
             new
             {
                 AccessKey = accessKey,
@@ -33,6 +34,7 @@ internal sealed class KeyProvider(
                 RegistrationId = registrationId,
                 SignedPrekeyId = signedPrekeyId,
                 SignedPreKeyPublic = signedPreKeyPublic,
+                PreKeys = preKeys,
                 SignedPreKeySignature = signedPreKeySignature,
                 SignedPreKeyTimestamp = signedPreKeyTimestamp
             },

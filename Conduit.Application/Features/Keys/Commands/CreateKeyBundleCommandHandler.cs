@@ -21,6 +21,7 @@ public sealed class CreateKeyBundleCommandHandler(
                 request.SignedPrekeyId,
                 request.SignedPreKeyPublic,
                 request.SignedPreKeySignature,
+                request.PreKeys,
                 request.SignedPreKeyTimestamp,
                 cancellationToken);
         }

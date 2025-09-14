@@ -11,6 +11,7 @@ public interface IKeyProvider
         int signedPrekeyId,
         byte[] signedPreKeyPublic,
         byte[] signedPreKeySignature,
+        IReadOnlyCollection<Domain.Models.PreKey> preKeys,
         DateTimeOffset signedPreKeyTimestamp,
         CancellationToken cancellationToken);
 }

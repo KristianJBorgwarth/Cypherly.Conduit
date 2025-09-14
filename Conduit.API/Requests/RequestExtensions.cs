@@ -13,6 +13,7 @@ internal static class RequestExtensions
             SignedPrekeyId = req.SignedPrekeyId,
             SignedPreKeyPublic = req.SignedPreKeyPublic,
             SignedPreKeySignature = req.SignedPreKeySignature,
+            PreKeys = req.PreKeys,
             SignedPreKeyTimestamp = req.SignedPreKeyTimestamp
         };
 }
