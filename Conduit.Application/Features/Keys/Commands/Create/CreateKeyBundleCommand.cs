@@ -1,8 +1,7 @@
-
 using Conduit.Application.Abstractions;
 using Conduit.Domain.Models;
 
-namespace Conduit.Application.Features.Keys.Commands;
+namespace Conduit.Application.Features.Keys.Commands.Create;
 
 public sealed record CreateKeyBundleCommand : ICommand
 {

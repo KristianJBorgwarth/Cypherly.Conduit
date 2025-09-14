@@ -3,7 +3,7 @@ using Conduit.Application.Contracts.Providers;
 using Conduit.Domain.Common;
 using Microsoft.Extensions.Logging;
 
-namespace Conduit.Application.Features.Keys.Commands;
+namespace Conduit.Application.Features.Keys.Commands.Create;
 
 public sealed class CreateKeyBundleCommandHandler(
     IKeyProvider keyProvider,
