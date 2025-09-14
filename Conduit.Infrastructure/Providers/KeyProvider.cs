@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using Conduit.Application.Contracts.Providers;
 using Conduit.Domain.Common;
+using Conduit.Domain.Models;
 using Conduit.Infrastructure.Constants;
 using Conduit.Infrastructure.Extensions;
 using Microsoft.Extensions.Logging;
@@ -21,9 +22,9 @@ internal sealed class KeyProvider(
         int signedPrekeyId,
         byte[] signedPreKeyPublic,
         byte[] signedPreKeySignature,
-        IReadOnlyCollection<Domain.Models.PreKey> preKeys,
+        IReadOnlyCollection<PreKey> preKeys,
         DateTimeOffset signedPreKeyTimestamp,
-        CancellationToken cancellationToken)
+        CancellationToken ct = default)
     {
         var response = await _client.PostAsJsonAsync(
             "keys",
@@ -38,14 +39,28 @@ internal sealed class KeyProvider(
                 SignedPreKeySignature = signedPreKeySignature,
                 SignedPreKeyTimestamp = signedPreKeyTimestamp
             },
-            cancellationToken);
+            ct);
 
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("KeyClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync(cancellationToken);
+            return await response.ToFailureResultAsync(ct, fromDetails: true);
         }
-        
+
+        return Result.Ok();
+    }
+
+    public async Task<Result> UploadOneTimePreKeysAsync(IReadOnlyCollection<PreKey> preKeys,
+        CancellationToken ct = default)
+    {
+        var response = await _client.PostAsJsonAsync("otps", new { PreKeys = preKeys }, ct);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("KeyClient failed with status code {ResponseStatusCode}", response.StatusCode);
+            return await response.ToFailureResultAsync(ct, fromDetails: true);
+        }
+
         return Result.Ok();
     }
 }

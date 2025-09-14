@@ -1,4 +1,5 @@
 using Conduit.Domain.Common;
+using Conduit.Domain.Models;
 
 namespace Conduit.Application.Contracts.Providers;
 
@@ -11,7 +12,9 @@ public interface IKeyProvider
         int signedPrekeyId,
         byte[] signedPreKeyPublic,
         byte[] signedPreKeySignature,
-        IReadOnlyCollection<Domain.Models.PreKey> preKeys,
+        IReadOnlyCollection<PreKey> preKeys,
         DateTimeOffset signedPreKeyTimestamp,
-        CancellationToken cancellationToken);
+        CancellationToken ct = default);
+    
+    Task<Result> UploadOneTimePreKeysAsync(IReadOnlyCollection<PreKey> preKeys, CancellationToken ct = default);
 }
