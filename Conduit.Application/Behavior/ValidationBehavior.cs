@@ -1,7 +1,6 @@
 using Conduit.Domain.Common;
 using FluentValidation;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 // ReSharper disable InvertIf
 

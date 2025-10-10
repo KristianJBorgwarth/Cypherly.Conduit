@@ -24,13 +24,13 @@ internal sealed class KeyEndpoints : IEndpoint
             })
             .Produces(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest);
-        
+
         group.MapPost("/otps", async ([FromBody] UploadOneTimePreKeysRequest req, ISender sender) =>
-        {
-            var result = await sender.Send(new UploadOneTimePreKeysCommand { PreKeys = req.PreKeys });
-            return result.Success ? Results.Created() : result.ToProblemDetails();
-        })
-        .Produces(StatusCodes.Status201Created)
-        .ProducesProblem(StatusCodes.Status400BadRequest);
+            {
+                var result = await sender.Send(new UploadOneTimePreKeysCommand { PreKeys = req.PreKeys });
+                return result.Success ? Results.Created() : result.ToProblemDetails();
+            })
+            .Produces(StatusCodes.Status201Created)
+            .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 }
