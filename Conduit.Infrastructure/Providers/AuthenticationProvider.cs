@@ -26,4 +26,17 @@ internal sealed class AuthenticationProvider(
         
         return await response.GetValueFromEnvelopeAsync<LoginDto>(cancellationToken);
     }
+
+    public async Task<Result> LogoutAsync(Guid deviceId, CancellationToken cancellationToken = default)
+    {
+        var response = await _client.PostAsJsonAsync("logout", deviceId, cancellationToken);
+        
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("IdentityClient failed with status code {ResponseStatusCode}", response.StatusCode);
+            return await response.ToFailureResultAsync(cancellationToken);
+        }
+
+        return Result.Ok();
+    }
 }
