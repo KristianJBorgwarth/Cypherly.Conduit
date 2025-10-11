@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Http.Json;
 using Conduit.Application.Contracts.Providers;
 using Conduit.Application.Features.UserProfile.Queries.GetUserProfileByTag;
 using Conduit.Domain.Common;
@@ -44,5 +45,18 @@ internal sealed class UserProfileProvider(
 
         if (response.StatusCode == HttpStatusCode.NoContent) return Result.Ok<GetUserProfileByTagDto>();
         return await response.GetValueFromEnvelopeAsync<GetUserProfileByTagDto>(ct: ct);
+    }
+
+    public async Task<Result<string>> UpdateDisplayName(string newDisplayName, CancellationToken ct = default)
+    {
+        var response = await _client.PutAsJsonAsync("display-name", new { NewDisplayName = newDisplayName }, ct);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("Failed to update display name: {ResponseReasonPhrase}", response.ReasonPhrase);
+            return await response.ToFailureResultAsync<string>(ct: ct);
+        }
+
+        return await response.GetValueFromEnvelopeAsync<string>(ct: ct);
     }
 }

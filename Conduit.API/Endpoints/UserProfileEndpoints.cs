@@ -29,13 +29,13 @@ internal sealed class UserProfileEndpoints : IEndpoint
             {
                 var result = await sender.Send(new GetUserProfileByTagQuery { UserTag = tag });
                 if (!result.Success) return result.ToProblemDetails();
-                
+
                 return result.Value is not null ? Results.Ok(result.Value) : Results.NoContent();
             })
             .Produces<GetUserProfileByTagDto>()
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status400BadRequest);
-        
+
         group.MapPost("profile-picture", async ([FromServices] ISender sender, [FromForm] IFormFile newProfilePicture, [FromQuery] Guid tenantId) =>
             {
                 var result = await sender.Send(new UpdateProfilePictureCommand { NewProfilePicture = newProfilePicture });
@@ -52,6 +52,14 @@ internal sealed class UserProfileEndpoints : IEndpoint
                 return result.Success ? Results.Ok() : result.ToProblemDetails();
             })
             .Produces(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status400BadRequest);
+
+        group.MapPost("displayname", async ([FromServices] ISender sender, [FromBody] string newDisplayName) =>
+            {
+                // Implementation for updating display name goes here
+                return Results.Ok();
+            })
+            .Produces<UpdateProfilePictureDto>()
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 }
