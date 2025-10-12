@@ -23,7 +23,10 @@ internal sealed class FriendsEndpoints : IEndpoint
                var result = await sender.Send(new GetFriendsQuery());
                if (!result.Success) return result.ToProblemDetails();
                return result.RequiredValue.Count > 0 ? Results.Ok(result.RequiredValue) : Results.NoContent();
-           });
+           })
+           .Produces<IReadOnlyCollection<GetFriendsDto>>()
+           .Produces(StatusCodes.Status204NoContent)
+           .ProducesProblem(StatusCodes.Status400BadRequest);
 
         group.MapPost("", async ([FromServices] ISender sender, [FromBody] CreateFriendshipRequest req) =>
             {
