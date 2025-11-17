@@ -23,9 +23,9 @@ internal sealed class IdentityEndpoints : IEndpoint
         .Accepts<LoginRequest>("application/json")
         .ProducesProblem(StatusCodes.Status400BadRequest);
 
-        group.MapPost("logout", async ([FromServices] ISender sender, [FromBody] Guid deviceId) =>
+        group.MapPost("logout", async ([FromServices] ISender sender) =>
         {
-            var result = await sender.Send(new LogoutCommand { DeviceId = deviceId });
+            var result = await sender.Send(new LogoutCommand());
             return result.Success ? Results.Ok() : result.ToProblemDetails();
         })
         .Produces(StatusCodes.Status200OK)
