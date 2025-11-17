@@ -14,11 +14,11 @@ public sealed class LogoutCommandHandler(
     {
         try
         {
-            return await identityProvider.LogoutAsync(request.DeviceId, cancellationToken);
+            return await identityProvider.LogoutAsync(cancellationToken);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error occurred while logging out device {DeviceId}", request.DeviceId);
+            logger.LogError(ex, "Error occurred while logging out device");
             return Result.Fail(Error.Failure("An unexpected error occurred during logout."));
         }
     }
