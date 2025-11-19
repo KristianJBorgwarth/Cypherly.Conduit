@@ -10,4 +10,5 @@ public interface IFriendProvider
     Task<Result<IReadOnlyCollection<Friend>>> GetFriendsAsync(CancellationToken ct = default);
     Task<Result<IReadOnlyCollection<GetFriendRequestsDto>>> GetFriendRequestsAsync(CancellationToken ct = default);
     Task<Result> DeleteFriendshipAsync(string friendTag, CancellationToken ct = default);
+    Task<Result> BlockUserAsync(string userTag, CancellationToken ct = default);
 }   

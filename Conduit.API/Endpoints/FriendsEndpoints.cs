@@ -1,5 +1,6 @@
 using Conduit.API.Common;
 using Conduit.API.Requests;
+using Conduit.Application.Features.Friends.Commands.Block;
 using Conduit.Application.Features.Friends.Commands.Create;
 using Conduit.Application.Features.Friends.Commands.Delete;
 using Conduit.Application.Features.Friends.Queries.GetFriendRequests;
@@ -45,6 +46,16 @@ internal sealed class FriendsEndpoints : IEndpoint
             })
             .Produces<IReadOnlyCollection<GetFriendRequestsDto>>()
             .Produces(StatusCodes.Status204NoContent)
+            .ProducesProblem(StatusCodes.Status400BadRequest);
+
+        group.MapPost("/block", async ([FromServices] ISender sender, [FromBody] string blockUserTag) =>
+            {
+                var result = await sender.Send(new BlockUserCommand { BlockUserTag = blockUserTag });
+
+                return result.Success ? Results.Ok() : result.ToProblemDetails();
+            })
+            .Accepts<CreateFriendshipRequest>("application/json")
+            .Produces(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
         group.MapDelete("", async ([FromServices] ISender sender, [FromQuery] string tag) =>

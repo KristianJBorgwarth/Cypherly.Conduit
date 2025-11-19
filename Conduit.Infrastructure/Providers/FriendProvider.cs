@@ -14,11 +14,11 @@ namespace Conduit.Infrastructure.Providers;
 
 internal sealed class FriendProvider(
     IHttpClientFactory clientFactory,
-    ILogger<FriendProvider> logger) 
+    ILogger<FriendProvider> logger)
     : IFriendProvider
 {
     private readonly HttpClient _client = clientFactory.CreateClient(ClientNames.UserProfileClient);
-    
+
     public async Task<Result<IReadOnlyCollection<Friend>>> GetFriendsAsync(CancellationToken ct = default)
     {
         var response = await _client.GetAsync("friendships", ct);
@@ -31,7 +31,7 @@ internal sealed class FriendProvider(
         if (response.StatusCode == HttpStatusCode.NoContent) return Result.Ok<IReadOnlyCollection<Friend>>([]);
         return await response.GetValueFromEnvelopeAsync<Friend[]>(ct);
     }
-    
+
     public async Task<Result> CreateFriendshipAsync(string friendTag, CancellationToken ct = default)
     {
         var response = await _client.PostAsJsonAsync("friendship", new { FriendTag = friendTag }, ct);
@@ -42,7 +42,7 @@ internal sealed class FriendProvider(
         }
         return Result.Ok();
     }
-    
+
     public async Task<Result<IReadOnlyCollection<GetFriendRequestsDto>>> GetFriendRequestsAsync(CancellationToken ct = default)
     {
         var response = await _client.GetAsync("friendship/requests", ct);
@@ -59,7 +59,13 @@ internal sealed class FriendProvider(
     {
         var encodedTag = Uri.EscapeDataString(friendTag);
         var response = await _client.DeleteAsync($"friendship/delete?friendtag={encodedTag}", ct);
-        
+
+        return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct);
+    }
+
+    public async Task<Result> BlockUserAsync(string userTag, CancellationToken ct = default)
+    {
+        var response = await _client.PostAsJsonAsync("friendship/block-user", new { BlockedUserTag = userTag }, ct);
         return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct);
     }
 }
