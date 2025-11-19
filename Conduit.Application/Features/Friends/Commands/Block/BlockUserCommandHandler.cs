@@ -6,8 +6,9 @@ using Microsoft.Extensions.Logging;
 namespace Conduit.Application.Features.Friends.Commands.Block
 {
     public sealed class BlockUserCommandHandler(
-            IFriendProvider friendProvider,
-            ILogger<BlockUserCommandHandler> logger) : ICommandHandler<BlockUserCommand>
+        IFriendProvider friendProvider,
+        ILogger<BlockUserCommandHandler> logger)
+        : ICommandHandler<BlockUserCommand>
     {
         public async Task<Result> Handle(BlockUserCommand request, CancellationToken cancellationToken)
         {

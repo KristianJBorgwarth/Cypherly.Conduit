@@ -65,7 +65,7 @@ internal sealed class FriendProvider(
 
     public async Task<Result> BlockUserAsync(string userTag, CancellationToken ct = default)
     {
-        var response = await _client.PostAsJsonAsync("friendship/block", new { BlockedUserTag = userTag }, ct);
+        var response = await _client.PostAsJsonAsync("friendship/block-user", new { BlockedUserTag = userTag }, ct);
         return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct);
     }
 }
