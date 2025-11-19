@@ -1,5 +1,4 @@
-﻿using Conduit.Application.Features.UserProfile.Commands.UpdateDisplayName;
-using Conduit.Application.Features.UserProfile.Queries.GetUserProfileByTag;
+﻿using Conduit.Application.Features.UserProfile.Queries.GetUserProfileByTag;
 using Conduit.Domain.Common;
 using Conduit.Domain.Models;
 
