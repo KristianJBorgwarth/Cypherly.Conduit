@@ -1,5 +1,6 @@
 ﻿using Conduit.API.Common;
 using Conduit.Application.Features.UserProfile.Commands.TogglePrivacy;
+using Conduit.Application.Features.UserProfile.Commands.UpdateDisplayName;
 using Conduit.Application.Features.UserProfile.Commands.UpdateProfilePicture;
 using Conduit.Application.Features.UserProfile.Queries.GetUserProfile;
 using Conduit.Application.Features.UserProfile.Queries.GetUserProfileByTag;
@@ -56,8 +57,8 @@ internal sealed class UserProfileEndpoints : IEndpoint
 
         group.MapPost("displayname", async ([FromServices] ISender sender, [FromBody] string newDisplayName) =>
             {
-                // Implementation for updating display name goes here
-                return Results.Ok();
+                var result = await sender.Send(new UpdateDisplayNameCommand { NewDisplayName = newDisplayName });
+                return result.Success ? Results.Ok() : result.ToProblemDetails();
             })
             .Produces<UpdateProfilePictureDto>()
             .ProducesProblem(StatusCodes.Status400BadRequest);
