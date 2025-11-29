@@ -16,7 +16,7 @@ public sealed class GetUserProfileQueryHandler(
     {
         try
         {
-            var profileResult = await userProfileProvider.GetUserProfile(request.ExclusiveConnectionId, cancellationToken);
+            var profileResult = await userProfileProvider.GetUserProfile(cancellationToken);
             if (!profileResult.Success) return Result.Fail<GetUserProfileDto>(profileResult.Error);
 
             var conIdsResult = await connectionIdProvider.GetConnectionIds(cancellationToken);
@@ -43,5 +43,5 @@ public sealed class GetUserProfileQueryHandler(
     /// <returns></returns>
     private static List<Guid> RemoveConnectionId(IReadOnlyCollection<Guid> connectionIds,
         Guid exclusiveConnectionId) =>
-        connectionIds.Where(id => id != exclusiveConnectionId).ToList();
+        [.. connectionIds.Where(id => id != exclusiveConnectionId)];
 }
