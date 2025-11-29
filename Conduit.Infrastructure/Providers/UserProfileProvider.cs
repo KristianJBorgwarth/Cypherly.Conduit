@@ -14,24 +14,24 @@ namespace Conduit.Infrastructure.Providers;
 
 internal sealed class UserProfileProvider(
     IHttpClientFactory factory,
-    ILogger<UserProfileProvider> logger) 
+    ILogger<UserProfileProvider> logger)
     : IUserProfileProvider
 {
     private readonly HttpClient _client = factory.CreateClient(ClientNames.UserProfileClient);
-    
-    public async Task<Result<UserProfile>> GetUserProfile(Guid exclusiveConnectionId, CancellationToken ct = default)
+
+    public async Task<Result<UserProfile>> GetUserProfile(CancellationToken ct = default)
     {
-        var response = await _client.GetAsync($"?ExclusiveConnectionId={exclusiveConnectionId}", ct);
+        var response = await _client.GetAsync("", ct);
 
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("Failed to get user profile: {ResponseReasonPhrase}", response.ReasonPhrase);
             return await response.ToFailureResultAsync<UserProfile>(ct: ct);
         }
-        
+
         return await response.GetValueFromEnvelopeAsync<UserProfile>(ct: ct);
     }
-    
+
     public async Task<Result<GetUserProfileByTagDto>> GetUserProfileByTag(string userTag, CancellationToken ct = default)
     {
         var encodedTag = Uri.EscapeDataString(userTag);
@@ -39,7 +39,7 @@ internal sealed class UserProfileProvider(
 
         if (!response.IsSuccessStatusCode)
         {
-            logger.LogError("Failed to get user profile by tag: {ResponseReasonPhrase}", response.ReasonPhrase); 
+            logger.LogError("Failed to get user profile by tag: {ResponseReasonPhrase}", response.ReasonPhrase);
             return await response.ToFailureResultAsync<GetUserProfileByTagDto>(ct: ct);
         }
 
