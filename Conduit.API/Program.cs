@@ -41,6 +41,7 @@ builder.Services.AddInfrastructure(configuration);
 builder.Services.AddSecurity(configuration);
 builder.Services.AddEndpoints();
 builder.Services.AddOpenApi();
+builder.Services.AddAntiforgery();
 
 builder.Services.AddCors(options =>
 {
@@ -75,6 +76,8 @@ app.UseCors("AllowElectron");
 app.UseAuthorization();
 
 app.UseHeaderPropagation();
+
+app.UseAntiforgery();
 
 app.RegisterMinimalEndpoints();
 
