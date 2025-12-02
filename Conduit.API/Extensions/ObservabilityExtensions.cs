@@ -12,7 +12,7 @@ public static class ObservabilityExtensions
         services.AddOpenTelemetry()
             .ConfigureResource(r => r
                 .AddService(
-                    serviceName: "cypherly.keystore.svc",
+                    serviceName: "cypherly.conduit.svc",
                     serviceVersion: typeof(Program).Assembly.GetName().Version?.ToString(),
                     serviceInstanceId: Environment.MachineName))
             .WithTracing(b => b
@@ -20,6 +20,7 @@ public static class ObservabilityExtensions
                 .AddHttpClientInstrumentation()
                 .AddOtlpExporter())
             .WithMetrics(b => b
+                .AddProcessInstrumentation()
                 .AddRuntimeInstrumentation()
                 .AddAspNetCoreInstrumentation()
                 .AddHttpClientInstrumentation()
