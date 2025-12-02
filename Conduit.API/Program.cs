@@ -3,10 +3,8 @@ using Conduit.API.Extensions;
 using Conduit.Application.Extensions;
 using Conduit.Infrastructure.Extensions;
 using Scalar.AspNetCore;
-using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 var env = builder.Environment;
 
@@ -22,18 +20,8 @@ if (env.IsDevelopment())
     configuration.AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 }
 
-if (env.IsProduction())
-{
-    Log.Logger = new LoggerConfiguration()
-        .ReadFrom.Configuration(configuration)
-        .CreateLogger();
-
-    builder.Host.UseSerilog();
-
-    builder.Services.AddObservability(configuration);
-
-    Serilog.Debugging.SelfLog.Enable(Console.Error);
-}
+builder.AddLogging();
+builder.Services.AddObservability();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddApplication();
@@ -62,7 +50,7 @@ app.MapScalarApiReference(options =>
 {
     options.WithTitle("Conduit.API")
         .WithTheme(ScalarTheme.Purple)
-        .WithDarkModeToggle(false)
+        .HideDarkModeToggle()
         .WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Axios);
 });
 
@@ -81,24 +69,17 @@ app.UseAntiforgery();
 
 app.RegisterMinimalEndpoints();
 
-if (env.IsProduction())
-{
-    app.UseSerilogRequestLogging();
-    app.MapPrometheusScrapingEndpoint();
-}
+
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
 try
 {
-    Log.Information("Cypherly.Conduit.API starting up");
     app.Run();
+    logger.LogInformation("Application started successfully");
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Application start-up failed");
-}
-finally
-{
-    Log.CloseAndFlush();
+    logger.LogCritical(ex, "Application start-up failed");
 }
 
 // Required for integration tests
