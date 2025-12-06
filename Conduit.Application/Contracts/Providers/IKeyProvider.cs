@@ -1,3 +1,4 @@
+using Conduit.Application.Features.Keys.Dtos;
 using Conduit.Domain.Common;
 using Conduit.Domain.Models;
 
@@ -15,6 +16,8 @@ public interface IKeyProvider
         IReadOnlyCollection<PreKey> preKeys,
         DateTimeOffset signedPreKeyTimestamp,
         CancellationToken ct = default);
-    
+
     Task<Result> UploadOneTimePreKeysAsync(IReadOnlyCollection<PreKey> preKeys, CancellationToken ct = default);
+
+    Task<Result<SessionKeysDto>> GetSessionKeysAsync(Guid accessKey, CancellationToken ct = default);
 }

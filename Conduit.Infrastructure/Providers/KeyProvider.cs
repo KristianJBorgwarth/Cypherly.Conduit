@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using Conduit.Application.Contracts.Providers;
+using Conduit.Application.Features.Keys.Dtos;
 using Conduit.Domain.Common;
 using Conduit.Domain.Models;
 using Conduit.Infrastructure.Constants;
@@ -62,5 +63,22 @@ internal sealed class KeyProvider(
         }
 
         return Result.Ok();
+    }
+
+    public async Task<Result<SessionKeysDto>> GetSessionKeysAsync(Guid accessKey,
+        CancellationToken ct = default)
+    {
+        var response = await _client.GetAsync($"keys/session?accessKey={accessKey}", ct);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("KeyClient failed with status code {ResponseStatusCode}", response.StatusCode);
+            return await response.ToFailureResultAsync<SessionKeysDto>(ct, fromDetails: true);
+        }
+
+        var sessionKeys = await response.Content.ReadFromJsonAsync<SessionKeysDto>(cancellationToken: ct)
+            ?? throw new InvalidOperationException("Response content is null");
+
+        return Result.Ok(sessionKeys);
     }
 }
