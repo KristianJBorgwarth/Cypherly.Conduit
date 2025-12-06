@@ -1,6 +1,8 @@
 using Conduit.API.Common;
 using Conduit.API.Requests;
 using Conduit.Application.Features.Keys.Commands.UploadOneTimePreKeys;
+using Conduit.Application.Features.Keys.Dtos;
+using Conduit.Application.Features.Keys.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +33,15 @@ internal sealed class KeyEndpoints : IEndpoint
                 return result.Success ? Results.Created() : result.ToProblemDetails();
             })
             .Produces(StatusCodes.Status201Created)
+            .ProducesProblem(StatusCodes.Status400BadRequest);
+
+        group.MapGet("/session", async ([FromQuery] Guid accessKey, ISender sender) =>
+            {
+                var result = await sender.Send(new GetSessionKeysQuery { AccessKey = accessKey });
+
+                return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
+            })
+            .Produces<SessionKeysDto>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 }
