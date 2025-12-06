@@ -18,9 +18,9 @@ public sealed class GetSessionKeysQueryHandler(
             var sessionKeys = await keyProvider.GetSessionKeysAsync(request.AccessKey, cancellationToken);
             return Result.Ok(sessionKeys);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            logger.LogError("An exception occured while retrieving session keys for AccessKey {AccessKey}", request.AccessKey);
+            logger.LogError(ex, "An exception occured while retrieving session keys for AccessKey {AccessKey}", request.AccessKey);
             return Result.Fail<SessionKeysDto>(Error.Failure("An unexpected error occured"));
         }
     }
