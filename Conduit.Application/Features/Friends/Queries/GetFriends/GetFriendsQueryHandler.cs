@@ -2,38 +2,28 @@ using Conduit.Application.Abstractions;
 using Conduit.Application.Contracts.Providers;
 using Conduit.Domain.Common;
 using Conduit.Domain.Models;
-using Microsoft.Extensions.Logging;
 
 namespace Conduit.Application.Features.Friends.Queries.GetFriends;
 
 public sealed class GetFriendsQueryHandler(
     IFriendProvider friendProvider,
-    IConnectionIdProvider connectionIdProvider,
-    ILogger<GetFriendsQueryHandler> logger)
+    IConnectionIdProvider connectionIdProvider)
     : IQueryHandler<GetFriendsQuery, IReadOnlyCollection<GetFriendsDto>>
 {
     public async Task<Result<IReadOnlyCollection<GetFriendsDto>>> Handle(GetFriendsQuery request, CancellationToken ct)
     {
-        try
-        {
-            var friendsResult = await friendProvider.GetFriendsAsync(ct);
-            if(!friendsResult.Success) return Result.Fail<IReadOnlyCollection<GetFriendsDto>>(friendsResult.Error);
-            
-            var friendIds = friendsResult.RequiredValue.Select(f => f.Id).ToList();
-            var conIdsResult = await connectionIdProvider.GetConnectionIds(friendIds, ct);
-            if(!conIdsResult.Success) return Result.Fail<IReadOnlyCollection<GetFriendsDto>>(conIdsResult.Error);
-            
-            var dtos = MapToDtos(friendsResult.RequiredValue, conIdsResult.RequiredValue);
+        var friendsResult = await friendProvider.GetFriendsAsync(ct);
+        if (!friendsResult.Success) return Result.Fail<IReadOnlyCollection<GetFriendsDto>>(friendsResult.Error);
 
-            return dtos;
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "An exception occured while retrieving friends for Tenant");
-            return Result.Fail<IReadOnlyCollection<GetFriendsDto>>(Error.Failure("An unexpected error occured"));
-        }
+        var friendIds = friendsResult.RequiredValue.Select(f => f.Id).ToList();
+        var conIdsResult = await connectionIdProvider.GetConnectionIds(friendIds, ct);
+        if (!conIdsResult.Success) return Result.Fail<IReadOnlyCollection<GetFriendsDto>>(conIdsResult.Error);
+
+        var dtos = MapToDtos(friendsResult.RequiredValue, conIdsResult.RequiredValue);
+
+        return dtos;
     }
-    
-    private static GetFriendsDto[] MapToDtos(IReadOnlyCollection<Friend> friends, Dictionary<Guid, IReadOnlyCollection<Guid>> connectionIds) => 
-        friends.Select(f => new GetFriendsDto(f, connectionIds[f.Id])).ToArray();
+
+    private static GetFriendsDto[] MapToDtos(IReadOnlyCollection<Friend> friends, Dictionary<Guid, IReadOnlyCollection<Guid>> connectionIds) =>
+        [.. friends.Select(f => new GetFriendsDto(f, connectionIds[f.Id]))];
 }
