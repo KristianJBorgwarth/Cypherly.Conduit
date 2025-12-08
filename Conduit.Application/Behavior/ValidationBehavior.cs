@@ -22,28 +22,10 @@ public class ValidationBehavior<TRequest, TResponse>(IValidator<TRequest>? valid
         if (validationResult.IsValid)
             return await next(cancellationToken);
 
-        var errorMessage =
-            string.Join("; ", validationResult.Errors.Select(e => $"{e.ErrorMessage} ({e.PropertyName})"));
+        var errorMessage = string.Join("; ", validationResult.Errors.Select(e => $"{e.ErrorMessage} ({e.PropertyName})"));
 
         var error = Error.Validation("Validation failed: " + errorMessage);
 
-        return typeof(TResponse).IsGenericType && typeof(TResponse).GetGenericTypeDefinition() == typeof(Result<>)
-            ? CreateGenericFailResponse(error)
-            : CreateFailResponse(error);
-    }
-
-    private static TResponse CreateFailResponse(Error error)
-    {
-        return (TResponse)Result.Fail(error);
-    }
-
-    private static TResponse CreateGenericFailResponse(Error error)
-    {
-        var resultType = typeof(TResponse).GetGenericArguments()[0];
-        var method = typeof(Result).GetMethods()
-            .FirstOrDefault(m => m is { Name: "Fail", IsGenericMethodDefinition: true })!;
-
-        var genericFailMethod = method.MakeGenericMethod(resultType);
-        return (TResponse)genericFailMethod.Invoke(null, [error])!;
+        return ResultFactory.Fail<TResponse>(error);
     }
 }
