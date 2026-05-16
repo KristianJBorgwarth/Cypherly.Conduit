@@ -1,4 +1,4 @@
-name: Build & Test .NET 8
+name: Build & Test .NET 10.0
 
 on:
   pull_request:
@@ -12,8 +12,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
-          quality: preview
+          dotnet-version: '10.0.x'
 
       - run: dotnet restore
       - run: dotnet build --no-restore
