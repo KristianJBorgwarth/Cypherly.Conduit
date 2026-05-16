@@ -26,7 +26,7 @@ builder.Services.AddObservability();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(configuration);
-builder.Services.AddSecurity(configuration);
+builder.Services.AddAuthentication(configuration);
 builder.Services.AddEndpoints();
 builder.Services.AddOpenApi();
 builder.Services.AddAntiforgery();
