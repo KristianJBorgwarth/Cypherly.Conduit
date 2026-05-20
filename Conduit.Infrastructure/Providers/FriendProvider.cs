@@ -25,11 +25,13 @@ internal sealed class FriendProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("FriendClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync<IReadOnlyCollection<Friend>>(ct);
+            return await response.ToFailureResultAsync<IReadOnlyCollection<Friend>>(ct, fromDetails: true);
         }
 
         if (response.StatusCode == HttpStatusCode.NoContent) return Result.Ok<IReadOnlyCollection<Friend>>([]);
-        return await response.GetValueFromEnvelopeAsync<Friend[]>(ct);
+        var value = await response.Content.ReadFromJsonAsync<Friend[]>(cancellationToken: ct)
+            ?? throw new InvalidOperationException("Response content is null");
+        return Result.Ok<IReadOnlyCollection<Friend>>(value);
     }
 
     public async Task<Result> CreateFriendshipAsync(string friendTag, CancellationToken ct = default)
@@ -38,7 +40,7 @@ internal sealed class FriendProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("FriendClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync(ct);
+            return await response.ToFailureResultAsync(ct, fromDetails: true);
         }
         return Result.Ok();
     }
@@ -49,10 +51,12 @@ internal sealed class FriendProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("FriendClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync<IReadOnlyCollection<GetFriendRequestsDto>>(ct);
+            return await response.ToFailureResultAsync<IReadOnlyCollection<GetFriendRequestsDto>>(ct, fromDetails: true);
         }
         if (response.StatusCode == HttpStatusCode.NoContent) return Result.Ok<IReadOnlyCollection<GetFriendRequestsDto>>([]);
-        return await response.GetValueFromEnvelopeAsync<GetFriendRequestsDto[]>(ct);
+        var value = await response.Content.ReadFromJsonAsync<GetFriendRequestsDto[]>(cancellationToken: ct)
+            ?? throw new InvalidOperationException("Response content is null");
+        return Result.Ok<IReadOnlyCollection<GetFriendRequestsDto>>(value);
     }
 
     public async Task<Result> DeleteFriendshipAsync(string friendTag, CancellationToken ct = default)
@@ -60,12 +64,12 @@ internal sealed class FriendProvider(
         var encodedTag = Uri.EscapeDataString(friendTag);
         var response = await _client.DeleteAsync($"friendship/delete?friendtag={encodedTag}", ct);
 
-        return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct);
+        return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct, fromDetails: true);
     }
 
     public async Task<Result> BlockUserAsync(string userTag, CancellationToken ct = default)
     {
         var response = await _client.PostAsJsonAsync("friendship/block-user", new { BlockedUserTag = userTag }, ct);
-        return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct);
+        return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct, fromDetails: true);
     }
 }

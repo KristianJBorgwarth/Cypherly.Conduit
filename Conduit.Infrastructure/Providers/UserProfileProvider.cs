@@ -26,10 +26,12 @@ internal sealed class UserProfileProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("Failed to get user profile: {ResponseReasonPhrase}", response.ReasonPhrase);
-            return await response.ToFailureResultAsync<UserProfile>(ct: ct);
+            return await response.ToFailureResultAsync<UserProfile>(ct, fromDetails: true);
         }
 
-        return await response.GetValueFromEnvelopeAsync<UserProfile>(ct: ct);
+        var value = await response.Content.ReadFromJsonAsync<UserProfile>(cancellationToken: ct)
+            ?? throw new InvalidOperationException("Response content is null");
+        return Result.Ok(value);
     }
 
     public async Task<Result<GetUserProfileByTagDto>> GetUserProfileByTag(string userTag, CancellationToken ct = default)
@@ -40,11 +42,13 @@ internal sealed class UserProfileProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("Failed to get user profile by tag: {ResponseReasonPhrase}", response.ReasonPhrase);
-            return await response.ToFailureResultAsync<GetUserProfileByTagDto>(ct: ct);
+            return await response.ToFailureResultAsync<GetUserProfileByTagDto>(ct, fromDetails: true);
         }
 
         if (response.StatusCode == HttpStatusCode.NoContent) return Result.Ok<GetUserProfileByTagDto>();
-        return await response.GetValueFromEnvelopeAsync<GetUserProfileByTagDto>(ct: ct);
+        var value = await response.Content.ReadFromJsonAsync<GetUserProfileByTagDto>(cancellationToken: ct)
+            ?? throw new InvalidOperationException("Response content is null");
+        return Result.Ok(value);
     }
 
     public async Task<Result<string>> UpdateDisplayName(string newDisplayName, CancellationToken ct = default)
@@ -54,9 +58,11 @@ internal sealed class UserProfileProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("Failed to update display name: {ResponseReasonPhrase}", response.ReasonPhrase);
-            return await response.ToFailureResultAsync<string>(ct: ct);
+            return await response.ToFailureResultAsync<string>(ct, fromDetails: true);
         }
 
-        return await response.GetValueFromEnvelopeAsync<string>(ct: ct);
+        var value = await response.Content.ReadFromJsonAsync<string>(cancellationToken: ct)
+            ?? throw new InvalidOperationException("Response content is null");
+        return Result.Ok(value);
     }
 }
