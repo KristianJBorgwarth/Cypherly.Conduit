@@ -30,14 +30,16 @@ internal sealed class UserProfileSettingsProvider(
         if(!response.IsSuccessStatusCode)
         {
             logger.LogError("Failed to update profile picture: {ResponseReasonPhrase}", response.ReasonPhrase);
-            return await response.ToFailureResultAsync<UpdateProfilePictureDto>(ct: ct);
+            return await response.ToFailureResultAsync<UpdateProfilePictureDto>(ct, fromDetails: true);
         }
-        return await response.GetValueFromEnvelopeAsync<UpdateProfilePictureDto>(ct);
+        var value = await response.Content.ReadFromJsonAsync<UpdateProfilePictureDto>(cancellationToken: ct)
+            ?? throw new InvalidOperationException("Response content is null");
+        return Result.Ok(value);
     }
     
     public async Task<Result> ToggleProfilePrivacyAsync(bool isPrivate, CancellationToken ct = default)
     {
         var response = await _client.PostAsJsonAsync("toggle-privacy", new { IsPrivate = isPrivate }, ct);
-        return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct: ct);
+        return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct, fromDetails: true);
     }
 }
