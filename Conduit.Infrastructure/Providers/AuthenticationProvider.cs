@@ -21,12 +21,10 @@ internal sealed class AuthenticationProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("IdentityClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync<LoginDto>(cancellationToken, fromDetails: true);
+            return await response.ToFailureResultAsync<LoginDto>(cancellationToken);
         }
 
-        var value = await response.Content.ReadFromJsonAsync<LoginDto>(cancellationToken: cancellationToken)
-            ?? throw new InvalidOperationException("Response content is null");
-        return Result.Ok(value);
+        return await response.GetValueFromEnvelopeAsync<LoginDto>(cancellationToken);
     }
 
     public async Task<Result> LogoutAsync(CancellationToken cancellationToken = default)
@@ -36,7 +34,7 @@ internal sealed class AuthenticationProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("IdentityClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync(cancellationToken, fromDetails: true);
+            return await response.ToFailureResultAsync(cancellationToken);
         }
 
         return Result.Ok();
