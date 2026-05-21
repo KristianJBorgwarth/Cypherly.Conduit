@@ -21,10 +21,11 @@ internal sealed class ConnectionIdProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("ConnectionIdClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync<IReadOnlyCollection<Guid>>(ct);
+            return await response.ToFailureResultAsync<IReadOnlyCollection<Guid>>(ct, fromDetails: true);
         }
 
-        var value = await response.GetValueFromEnvelopeAsync<ConnectionIdsDto>(ct: CancellationToken.None);
+        var value = await response.Content.ReadFromJsonAsync<ConnectionIdsDto>(cancellationToken: ct)
+            ?? throw new InvalidOperationException("Response content is null");
         return Result.Ok(value.ConnectionIds);
     }
 
@@ -39,10 +40,11 @@ internal sealed class ConnectionIdProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("ConnectionIdClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync<Dictionary<Guid, IReadOnlyCollection<Guid>>>(ct);
+            return await response.ToFailureResultAsync<Dictionary<Guid, IReadOnlyCollection<Guid>>>(ct, fromDetails: true);
         }
 
-        var value = await response.GetValueFromEnvelopeAsync<MultipleConnectionIds>(ct: CancellationToken.None);
+        var value = await response.Content.ReadFromJsonAsync<MultipleConnectionIds>(cancellationToken: ct)
+            ?? throw new InvalidOperationException("Response content is null");
         return Result.Ok(value.ConnectionIds);
     }
 
