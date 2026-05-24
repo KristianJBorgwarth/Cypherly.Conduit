@@ -9,5 +9,6 @@ public static class InfrastructureExtensions
     {
         services.ConfigureOptions(configuration);
         services.ConfigureHttpClients();
+        services.AddCaching();
     }
 }
