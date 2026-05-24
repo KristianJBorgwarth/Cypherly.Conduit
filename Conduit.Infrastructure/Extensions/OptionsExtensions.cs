@@ -11,5 +11,9 @@ internal static class OptionsExtensions
         services.AddOptions<DownstreamOptions>()
             .Bind(configuration.GetSection("Api"))
             .ValidateDataAnnotations();
+
+        services.AddOptions<ValkeySettings>()
+            .Bind(configuration.GetSection("Valkey"))
+            .ValidateDataAnnotations();
     }
 }
