@@ -37,6 +37,26 @@ internal sealed class UserProfileEndpoints : IEndpoint
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
+        group.MapGet("avatar", async (
+                [FromServices] ISender sender, 
+                [FromQuery] Guid fileKey,
+                HttpContext ctx,
+                CancellationToken ct) =>
+            {
+                var result = await sender.Send(new GetAvatarQuery { FileKey = fileKey }, ct);
+                if (!result.Success) return result.ToProblemDetails();
+
+                var avatar = result.RequiredValue;
+                if (avatar.Content is null) return Results.StatusCode(StatusCodes.Status304NotModified);
+
+                ctx.Response.AddEtag(avatar.Etag);
+
+                return Results.File(avatar.Content, avatar.ContentType);
+            })
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status304NotModified)
+            .ProducesProblem(StatusCodes.Status400BadRequest);
+
         group.MapPost("profile-picture", async ([FromServices] ISender sender, [FromForm] IFormFile newProfilePicture, [FromQuery] Guid tenantId) =>
             {
                 var result = await sender.Send(new UpdateProfilePictureCommand { NewProfilePicture = newProfilePicture });
