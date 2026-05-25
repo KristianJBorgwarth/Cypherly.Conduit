@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A68CC82A-2E5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{92691545-A5BF-445B-AA19-931B07930D7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Test.Unit", "Gateway.Test.Unit\Gateway.Test.Unit.csproj", "{F37F4D7C-59C7-4652-98E0-FC4625E37C20}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Test.Unit", "Test\Gateway.Test.Unit\Gateway.Test.Unit.csproj", "{F37F4D7C-59C7-4652-98E0-FC4625E37C20}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.Application", "Conduit.Application\Conduit.Application.csproj", "{C28BBB6A-0161-4F64-B154-101C28E0A7A6}"
 EndProject
