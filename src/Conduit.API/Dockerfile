@@ -7,13 +7,13 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Conduit.API/Conduit.API.csproj", "Conduit.API/"]
-COPY ["Conduit.Domain/Conduit.Domain.csproj", "Conduit.Domain/"]
-COPY ["Conduit.Application/Conduit.Application.csproj", "Conduit.Application/"]
-COPY ["Conduit.Infrastructure/Conduit.Infrastructure.csproj", "Conduit.Infrastructure/"]
-RUN dotnet restore "Conduit.API/Conduit.API.csproj"
+COPY ["src/Conduit.API/Conduit.API.csproj", "src/Conduit.API/"]
+COPY ["src/Conduit.Domain/Conduit.Domain.csproj", "src/Conduit.Domain/"]
+COPY ["src/Conduit.Application/Conduit.Application.csproj", "src/Conduit.Application/"]
+COPY ["src/Conduit.Infrastructure/Conduit.Infrastructure.csproj", "src/Conduit.Infrastructure/"]
+RUN dotnet restore "src/Conduit.API/Conduit.API.csproj"
 COPY . .
-WORKDIR "/src/Conduit.API"
+WORKDIR "/src/src/Conduit.API"
 RUN dotnet build "./Conduit.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
