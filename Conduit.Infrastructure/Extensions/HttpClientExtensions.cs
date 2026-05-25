@@ -14,6 +14,10 @@ internal static class HttpClientExtensions
         services.AddHeaderPropagation(options =>
         {
             options.Headers.Add("Authorization");
+            options.Headers.Add("If-None-Match");
+            options.Headers.Add("If-Modified-Since");
+            options.Headers.Add("If-Match");
+            options.Headers.Add("If-Unmodified-Since");
         });
         
         var downStreamOptions =services.BuildServiceProvider().GetRequiredService<IOptions<DownstreamOptions>>().Value;

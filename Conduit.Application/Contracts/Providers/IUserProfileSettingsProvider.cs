@@ -7,5 +7,6 @@ namespace Conduit.Application.Contracts.Providers;
 public interface IUserProfileSettingsProvider
 {
     public Task<Result<UpdateProfilePictureDto>> UpdateProfilePicture(IFormFile newProfilePicture, CancellationToken ct = default);
+    public Task<Result<Avatar>> GetAvatarAsync(Guid fileKey, CancellationToken ct = default);
     public Task<Result> ToggleProfilePrivacyAsync(bool isPrivate, CancellationToken ct = default);
 }
