@@ -16,4 +16,6 @@ public static class InfrastructureExtensions
     {
         services.AddScoped<IAvatarService, AvatarService>();
     }
+        services.AddCaching();
+    }
 }
