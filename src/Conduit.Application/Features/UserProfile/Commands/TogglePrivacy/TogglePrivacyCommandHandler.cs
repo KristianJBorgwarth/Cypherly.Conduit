@@ -8,6 +8,6 @@ public sealed class TogglePrivacyCommandHandler(IUserProfileSettingsProvider use
 {
     public Task<Result> Handle(TogglePrivacyCommand request, CancellationToken cancellationToken)
     {
-        return userProfileSettingsProvider.ToggleProfilePrivacyAsync(request.IsPrivate, cancellationToken);
+        return userProfileSettingsProvider.TogglePrivacy(request.IsPrivate, cancellationToken);
     }
 }
