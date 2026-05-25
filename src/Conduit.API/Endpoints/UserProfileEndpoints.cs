@@ -18,17 +18,23 @@ internal sealed class UserProfileEndpoints : IEndpoint
             .RequireAuthorization()
             .ProducesProblem(StatusCodes.Status401Unauthorized);
 
-        group.MapGet("/", async ([FromServices] ISender sender, [FromQuery] Guid exclusiveConnectionId) =>
+        group.MapGet("/", async (
+                [FromServices] ISender sender, 
+                [FromQuery] Guid exclusiveConnectionId,
+                CancellationToken ct) =>
             {
-                var result = await sender.Send(new GetUserProfileQuery { ExclusiveConnectionId = exclusiveConnectionId });
+                var result = await sender.Send(new GetUserProfileQuery { ExclusiveConnectionId = exclusiveConnectionId }, ct);
                 return result.Success ? Results.Ok(result.RequiredValue) : result.ToProblemDetails();
             })
             .Produces<GetUserProfileDto>()
             .ProducesProblem(StatusCodes.Status404NotFound);
 
-        group.MapGet("/tag", async ([FromServices] ISender sender, [FromQuery] string tag) =>
+        group.MapGet("/tag", async (
+                [FromServices] ISender sender, 
+                [FromQuery] string tag,
+                CancellationToken ct) =>
             {
-                var result = await sender.Send(new GetUserProfileByTagQuery { UserTag = tag });
+                var result = await sender.Send(new GetUserProfileByTagQuery { UserTag = tag }, ct);
                 if (!result.Success) return result.ToProblemDetails();
 
                 return result.Value is not null ? Results.Ok(result.Value) : Results.NoContent();
@@ -64,7 +70,7 @@ internal sealed class UserProfileEndpoints : IEndpoint
                 [FromQuery] Guid tenantId,
                 CancellationToken ct) =>
             {
-                var result = await sender.Send(new UpdateAvatarcommand { Avatar = avatar });
+                var result = await sender.Send(new UpdateAvatarcommand { Avatar = avatar }, ct);
                 return result.Success ? Results.Ok(result.RequiredValue) : result.ToProblemDetails();
             })
             .Produces<UpdateAvatarDto>()
@@ -72,17 +78,23 @@ internal sealed class UserProfileEndpoints : IEndpoint
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status415UnsupportedMediaType);
 
-        group.MapPost("toggle-privacy", async ([FromServices] ISender sender, [FromBody] bool isPrivate) =>
+        group.MapPost("toggle-privacy", async (
+                 [FromServices] ISender sender, 
+                 [FromBody] bool isPrivate,
+                 CancellationToken ct) =>
             {
-                var result = await sender.Send(new TogglePrivacyCommand { IsPrivate = isPrivate });
+                var result = await sender.Send(new TogglePrivacyCommand { IsPrivate = isPrivate }, ct);
                 return result.Success ? Results.Ok() : result.ToProblemDetails();
             })
             .Produces(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
-        group.MapPost("displayname", async ([FromServices] ISender sender, [FromBody] string newDisplayName) =>
+        group.MapPost("displayname", async (
+                [FromServices] ISender sender, 
+                [FromBody] string newDisplayName,
+                CancellationToken ct) =>
             {
-                var result = await sender.Send(new UpdateDisplayNameCommand { NewDisplayName = newDisplayName });
+                var result = await sender.Send(new UpdateDisplayNameCommand { NewDisplayName = newDisplayName }, ct);
                 return result.Success ? Results.Ok() : result.ToProblemDetails();
             })
             .Produces<UpdateAvatarDto>()

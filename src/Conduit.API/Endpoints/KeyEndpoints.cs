@@ -17,27 +17,36 @@ internal sealed class KeyEndpoints : IEndpoint
             .RequireAuthorization()
             .ProducesProblem(StatusCodes.Status401Unauthorized);
 
-        group.MapPost("/", async ([FromBody] CreateKeyBundleRequest req, ISender sender) =>
+        group.MapPost("/", async (
+                [FromBody] CreateKeyBundleRequest req,
+                ISender sender,
+                CancellationToken ct) =>
             {
                 var cmd = req.MapToCommand();
-                var result = await sender.Send(cmd);
+                var result = await sender.Send(cmd, ct);
 
                 return result.Success ? Results.Created() : result.ToProblemDetails();
             })
             .Produces(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest);
 
-        group.MapPost("/otps", async ([FromBody] UploadOneTimePreKeysRequest req, ISender sender) =>
+        group.MapPost("/otps", async (
+                [FromBody] UploadOneTimePreKeysRequest req,
+                ISender sender,
+                CancellationToken ct) =>
             {
-                var result = await sender.Send(new UploadOneTimePreKeysCommand { PreKeys = req.PreKeys });
+                var result = await sender.Send(new UploadOneTimePreKeysCommand { PreKeys = req.PreKeys }, ct);
                 return result.Success ? Results.Created() : result.ToProblemDetails();
             })
             .Produces(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
-        group.MapGet("/session", async ([FromQuery] Guid accessKey, ISender sender) =>
+        group.MapGet("/session", async (
+                [FromQuery] Guid accessKey,
+                ISender sender,
+                CancellationToken ct) =>
             {
-                var result = await sender.Send(new GetSessionKeysQuery { AccessKey = accessKey });
+                var result = await sender.Send(new GetSessionKeysQuery { AccessKey = accessKey }, ct);
 
                 return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
             })

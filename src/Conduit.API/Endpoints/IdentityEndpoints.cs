@@ -14,18 +14,23 @@ internal sealed class IdentityEndpoints : IEndpoint
         var group = routeBuilder.MapGroup("api/identity")
             .WithTags("identity");
 
-        group.MapPost("login", async ([FromServices] ISender sender, [FromBody] LoginRequest req) =>
+        group.MapPost("login", async (
+                [FromServices] ISender sender,
+                [FromBody] LoginRequest req,
+                CancellationToken ct) =>
         {
-            var result = await sender.Send(new LoginCommand { Email = req.Email, Password = req.Password });
+            var result = await sender.Send(new LoginCommand { Email = req.Email, Password = req.Password }, ct);
             return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
         })
         .Produces<LoginDto>()
         .Accepts<LoginRequest>("application/json")
         .ProducesProblem(StatusCodes.Status400BadRequest);
 
-        group.MapPost("logout", async ([FromServices] ISender sender) =>
+        group.MapPost("logout", async (
+                [FromServices] ISender sender,
+                CancellationToken ct) =>
         {
-            var result = await sender.Send(new LogoutCommand());
+            var result = await sender.Send(new LogoutCommand(), ct);
             return result.Success ? Results.Ok() : result.ToProblemDetails();
         })
         .Produces(StatusCodes.Status200OK)

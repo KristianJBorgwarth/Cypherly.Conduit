@@ -19,9 +19,11 @@ internal sealed class FriendsEndpoints : IEndpoint
             .RequireAuthorization()
             .ProducesProblem(StatusCodes.Status401Unauthorized);
 
-        group.MapGet("/list", async ([FromServices] ISender sender) =>
+        group.MapGet("/list", async (
+                [FromServices] ISender sender,
+                CancellationToken ct) =>
            {
-               var result = await sender.Send(new GetFriendsQuery());
+               var result = await sender.Send(new GetFriendsQuery(), ct);
                if (!result.Success) return result.ToProblemDetails();
                return result.RequiredValue.Count > 0 ? Results.Ok(result.RequiredValue) : Results.NoContent();
            })
@@ -29,18 +31,23 @@ internal sealed class FriendsEndpoints : IEndpoint
            .Produces(StatusCodes.Status204NoContent)
            .ProducesProblem(StatusCodes.Status400BadRequest);
 
-        group.MapPost("", async ([FromServices] ISender sender, [FromBody] CreateFriendshipRequest req) =>
+        group.MapPost("", async (
+                [FromServices] ISender sender,
+                [FromBody] CreateFriendshipRequest req,
+                CancellationToken ct) =>
             {
-                var result = await sender.Send(new CreateFriendshipCommand { FriendTag = req.FriendTag });
+                var result = await sender.Send(new CreateFriendshipCommand { FriendTag = req.FriendTag }, ct);
                 return result.Success ? Results.Ok() : result.ToProblemDetails();
             })
             .Accepts<CreateFriendshipRequest>("application/json")
             .Produces(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
-        group.MapGet("/requests", async ([FromServices] ISender sender) =>
+        group.MapGet("/requests", async (
+                [FromServices] ISender sender,
+                CancellationToken ct) =>
             {
-                var result = await sender.Send(new GetFriendRequestsQuery());
+                var result = await sender.Send(new GetFriendRequestsQuery(), ct);
                 if (!result.Success) return result.ToProblemDetails();
                 return result.RequiredValue.Count > 0 ? Results.Ok(result.RequiredValue) : Results.NoContent();
             })
@@ -48,9 +55,12 @@ internal sealed class FriendsEndpoints : IEndpoint
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
-        group.MapPost("/block", async ([FromServices] ISender sender, [FromBody] string blockUserTag) =>
+        group.MapPost("/block", async (
+                [FromServices] ISender sender,
+                [FromBody] string blockUserTag,
+                CancellationToken ct) =>
             {
-                var result = await sender.Send(new BlockUserCommand { BlockUserTag = blockUserTag });
+                var result = await sender.Send(new BlockUserCommand { BlockUserTag = blockUserTag }, ct);
 
                 return result.Success ? Results.Ok() : result.ToProblemDetails();
             })
@@ -58,9 +68,12 @@ internal sealed class FriendsEndpoints : IEndpoint
             .Produces(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
-        group.MapDelete("", async ([FromServices] ISender sender, [FromQuery] string tag) =>
+        group.MapDelete("", async (
+                [FromServices] ISender sender,
+                [FromQuery] string tag,
+                CancellationToken ct) =>
             {
-                var result = await sender.Send(new DeleteFriendshipCommand { FriendTag = tag });
+                var result = await sender.Send(new DeleteFriendshipCommand { FriendTag = tag }, ct);
                 return result.Success ? Results.Ok() : result.ToProblemDetails();
             })
             .Produces(StatusCodes.Status200OK)
