@@ -18,7 +18,7 @@ internal sealed class AvatarService(
             $"avatar-{fileKey}",
             async entry =>
             {
-                return await uspProvider.GetAvatarAsync(fileKey, ct);
+                return await uspProvider.GetAvatar(fileKey, ct);
             },
             _cacheEntryOptions,
             cancellationToken: ct);

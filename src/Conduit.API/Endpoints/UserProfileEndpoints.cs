@@ -1,7 +1,7 @@
 ﻿using Conduit.API.Common;
 using Conduit.Application.Features.UserProfile.Commands.TogglePrivacy;
+using Conduit.Application.Features.UserProfile.Commands.UpdateAvatar;
 using Conduit.Application.Features.UserProfile.Commands.UpdateDisplayName;
-using Conduit.Application.Features.UserProfile.Commands.UpdateProfilePicture;
 using Conduit.Application.Features.UserProfile.Queries.GetUserProfile;
 using Conduit.Application.Features.UserProfile.Queries.GetUserProfileByTag;
 using MediatR;
@@ -57,12 +57,17 @@ internal sealed class UserProfileEndpoints : IEndpoint
             .Produces(StatusCodes.Status304NotModified)
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
-        group.MapPost("profile-picture", async ([FromServices] ISender sender, [FromForm] IFormFile newProfilePicture, [FromQuery] Guid tenantId) =>
+        group.MapPost("avatar", async (
+                [FromServices] 
+                ISender sender, 
+                [FromForm] IFormFile avatar, 
+                [FromQuery] Guid tenantId,
+                CancellationToken ct) =>
             {
-                var result = await sender.Send(new UpdateProfilePictureCommand { NewProfilePicture = newProfilePicture });
+                var result = await sender.Send(new UpdateAvatarcommand { Avatar = avatar });
                 return result.Success ? Results.Ok(result.RequiredValue) : result.ToProblemDetails();
             })
-            .Produces<UpdateProfilePictureDto>()
+            .Produces<UpdateAvatarDto>()
             .Accepts<IFormFile>("multipart/form-data")
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status415UnsupportedMediaType);
@@ -80,7 +85,7 @@ internal sealed class UserProfileEndpoints : IEndpoint
                 var result = await sender.Send(new UpdateDisplayNameCommand { NewDisplayName = newDisplayName });
                 return result.Success ? Results.Ok() : result.ToProblemDetails();
             })
-            .Produces<UpdateProfilePictureDto>()
+            .Produces<UpdateAvatarDto>()
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 }
