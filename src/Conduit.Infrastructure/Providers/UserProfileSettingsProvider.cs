@@ -25,14 +25,16 @@ internal sealed class UserProfileSettingsProvider(
         var fileContent = new StreamContent(stream);
         fileContent.Headers.ContentType = new MediaTypeHeaderValue(newProfilePicture.ContentType);
 
-        content.Add(fileContent, "avatar", newProfilePicture.FileName);
+        content.Add(fileContent, "Avatar", newProfilePicture.FileName);
 
         var response = await _client.PutAsync("avatar", content, ct);
+
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("Failed to update profile picture: {ResponseReasonPhrase}", response.ReasonPhrase);
             return await response.ToFailureResultAsync<UpdateAvatarDto>(ct, fromDetails: true);
         }
+
         var value = await response.Content.ReadFromJsonAsync<UpdateAvatarDto>(cancellationToken: ct)
             ?? throw new InvalidOperationException("Response content is null");
         return Result.Ok(value);
