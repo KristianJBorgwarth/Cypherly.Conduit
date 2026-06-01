@@ -29,7 +29,6 @@ builder.Services.AddInfrastructure(configuration);
 builder.Services.AddAuthentication(configuration);
 builder.Services.AddEndpoints();
 builder.Services.AddOpenApi();
-builder.Services.AddAntiforgery();
 
 builder.Services.AddCors(options =>
 {
