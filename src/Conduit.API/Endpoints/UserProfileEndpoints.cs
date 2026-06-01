@@ -67,7 +67,6 @@ internal sealed class UserProfileEndpoints : IEndpoint
                 [FromServices] 
                 ISender sender, 
                 [FromForm] IFormFile avatar, 
-                [FromQuery] Guid tenantId,
                 CancellationToken ct) =>
             {
                 var result = await sender.Send(new UpdateAvatarcommand { Avatar = avatar }, ct);
