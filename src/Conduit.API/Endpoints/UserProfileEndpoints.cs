@@ -63,7 +63,7 @@ internal sealed class UserProfileEndpoints : IEndpoint
             .Produces(StatusCodes.Status304NotModified)
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
-        group.MapPost("avatar", async (
+        group.MapPut("avatar", async (
                 [FromServices] 
                 ISender sender, 
                 [FromForm] IFormFile avatar, 
