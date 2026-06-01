@@ -27,7 +27,7 @@ internal sealed class UserProfileSettingsProvider(
 
         content.Add(fileContent, "avatar", newProfilePicture.FileName);
 
-        var response = await _client.PostAsync("avatar", content, ct);
+        var response = await _client.PutAsync("avatar", content, ct);
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("Failed to update profile picture: {ResponseReasonPhrase}", response.ReasonPhrase);
