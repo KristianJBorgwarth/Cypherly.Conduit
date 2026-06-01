@@ -75,6 +75,7 @@ internal sealed class UserProfileEndpoints : IEndpoint
             })
             .Produces<UpdateAvatarDto>()
             .Accepts<IFormFile>("multipart/form-data")
+            .DisableAntiforgery()
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status415UnsupportedMediaType);
 

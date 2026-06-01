@@ -65,8 +65,6 @@ app.UseAuthorization();
 
 app.UseHeaderPropagation();
 
-app.UseAntiforgery();
-
 app.RegisterMinimalEndpoints();
 
 
