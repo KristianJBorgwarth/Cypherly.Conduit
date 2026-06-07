@@ -9,7 +9,7 @@ public sealed class GetUserProfileDto
     public Guid Id { get; private init; }
     public string Username { get; private init; }
     public string UserTag { get; private init; }
-    public string? ProfilePictureUrl { get; private init; }
+    public Guid? AvatarKey { get; private init; }
     public string? DisplayName { get; private init; }
     public IReadOnlyCollection<Guid>  ConnectionIds { get; private init; }
  
@@ -18,7 +18,7 @@ public sealed class GetUserProfileDto
         Id = profile.Id;
         Username = profile.Username;
         UserTag = profile.UserTag;
-        ProfilePictureUrl = profile.ProfilePictureUrl;
+        AvatarKey = profile.AvatarKey;
         DisplayName = profile.DisplayName;
         ConnectionIds = connectionIds;
     }
