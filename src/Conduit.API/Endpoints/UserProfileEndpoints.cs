@@ -56,6 +56,7 @@ internal sealed class UserProfileEndpoints : IEndpoint
                 if (avatar.Content is null) return Results.StatusCode(StatusCodes.Status304NotModified);
 
                 ctx.Response.AddEtag(avatar.Etag);
+                ctx.Response.Headers.CacheControl = "no-cache";
 
                 return Results.File(avatar.Content, avatar.ContentType);
             })
