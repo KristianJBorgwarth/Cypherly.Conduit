@@ -9,12 +9,5 @@ public static class InfrastructureExtensions
     {
         services.ConfigureOptions(configuration);
         services.ConfigureHttpClients();
-        services.AddCaching();
-        services.AddServices();
-    }
-
-    private static void AddServices(this IServiceCollection services)
-    {
-        services.AddScoped<IAvatarService, AvatarService>();
     }
 }
