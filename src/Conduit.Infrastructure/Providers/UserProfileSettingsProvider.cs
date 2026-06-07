@@ -44,14 +44,14 @@ internal sealed class UserProfileSettingsProvider(
     {
         var response = await _client.GetAsync($"avatar?FileKey={FileKey}", ct);
 
-        if (!response.IsSuccessStatusCode)
+        if (response.StatusCode == HttpStatusCode.NotModified)
+        {
+            return Result.Ok(new Avatar { Etag = response.GetEtag() });
+        }
+        else if (!response.IsSuccessStatusCode)
         {
             logger.LogError("Failed to get avatar: {ResponseReasonPhrase}", response.ReasonPhrase);
             return await response.ToFailureResultAsync<Avatar>(ct, fromDetails: true);
-        }
-        else if (response.StatusCode == HttpStatusCode.NotModified)
-        {
-            return Result.Ok(new Avatar { Etag = response.GetEtag() });
         }
 
         var stream = await response.Content.ReadAsStreamAsync(ct);
