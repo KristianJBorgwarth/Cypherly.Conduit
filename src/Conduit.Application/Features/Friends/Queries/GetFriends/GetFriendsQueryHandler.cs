@@ -14,6 +14,8 @@ public sealed class GetFriendsQueryHandler(
     {
         var friendsResult = await friendProvider.GetFriendsAsync(ct);
         if (!friendsResult.Success) return Result.Fail<IReadOnlyCollection<GetFriendsDto>>(friendsResult.Error);
+        
+        if(friendsResult.RequiredValue.Count == 0) return Result.Ok<IReadOnlyCollection<GetFriendsDto>>([]);
 
         var friendIds = friendsResult.RequiredValue.Select(f => f.Id).ToList();
         var conIdsResult = await connectionIdProvider.GetConnectionIds(friendIds, ct);
