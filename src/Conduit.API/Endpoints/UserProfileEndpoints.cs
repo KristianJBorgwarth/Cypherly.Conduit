@@ -59,6 +59,7 @@ internal sealed class UserProfileEndpoints : IEndpoint
 
                 return Results.File(avatar.Content, avatar.ContentType);
             })
+            .AllowAnonymous()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status304NotModified)
             .ProducesProblem(StatusCodes.Status400BadRequest);
