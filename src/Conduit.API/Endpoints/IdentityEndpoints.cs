@@ -3,6 +3,7 @@ using Conduit.API.Requests;
 using Conduit.Application.Features.Authentication.Commands.Login;
 using Conduit.Application.Features.Authentication.Commands.Logout;
 using Conduit.Application.Features.Authentication.Commands.VerifyLogin;
+using Conduit.Application.Features.Authentication.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,6 +37,7 @@ internal sealed class IdentityEndpoints : IEndpoint
         })
         .Produces(StatusCodes.Status200OK)
         .Accepts<Guid>("application/json")
+        .RequireAuthorization()
         .ProducesProblem(StatusCodes.Status400BadRequest);
 
         group.MapPost("verify-login", async (
@@ -43,11 +45,22 @@ internal sealed class IdentityEndpoints : IEndpoint
                 [FromBody] VerifyLoginRequest req,
                 CancellationToken ct) =>
         {
-            var result = await sender.Send(new VerifyLoginCommand { LoginVerificationCode = req.LoginVerificationCode }, ct);
-            return result.Success ? Results.Ok() : result.ToProblemDetails();
+            var result = await sender.Send(new VerifyLoginCommand { UserId = req.UserId, LoginVerificationCode = req.LoginVerificationCode }, ct);
+            return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
         })
         .Produces<VerifyLoginDto>()
         .Accepts<VerifyLoginRequest>("application/json")
         .ProducesProblem(StatusCodes.Status400BadRequest);
+
+        group.MapGet("nonce", async (
+                 [FromServices] ISender sender,
+                 [AsParameters] GetNonceRequest req,
+                 CancellationToken ct) =>
+         {
+             var result = await sender.Send(new GetNonceQuery() { UserId = req.UserId, DeviceId = req.DeviceId }, ct);
+             return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
+         })
+         .Produces<GetNonceDto>()
+         .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 }
