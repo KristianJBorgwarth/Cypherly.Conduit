@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using Conduit.Application.Contracts.Providers;
 using Conduit.Application.Features.Authentication.Commands.Login;
 using Conduit.Application.Features.Authentication.Commands.VerifyLogin;
+using Conduit.Application.Features.Authentication.Commands.VerifyNonce;
 using Conduit.Application.Features.Authentication.Queries;
 using Conduit.Domain.Common;
 using Conduit.Infrastructure.Constants;
@@ -68,7 +69,20 @@ internal sealed class AuthenticationProvider(
         }
 
         return await response.GetValueFromEnvelopeAsync<GetNonceDto>(ct);
-        
+
+    }
+
+    public async Task<Result<VerifyNonceDto>> VerifyNonceAsync(Guid userId, Guid nonceId, Guid deviceId, string nonce, CancellationToken ct = default)
+    {
+        var response = await _client.PostAsJsonAsync("verify-nonce", new { UserId = userId, NonceId = nonceId, DeviceId = deviceId, Nonce = nonce }, ct);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("IdentityClient failed with status code {ResponseStatusCode}", response.StatusCode);
+            return await response.ToFailureResultAsync<VerifyNonceDto>(ct);
+        }
+
+        return await response.GetValueFromEnvelopeAsync<VerifyNonceDto>(ct);
     }
 
 }
