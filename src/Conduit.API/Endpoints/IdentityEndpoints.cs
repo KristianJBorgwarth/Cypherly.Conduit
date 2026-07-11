@@ -3,6 +3,7 @@ using Conduit.API.Requests;
 using Conduit.Application.Features.Authentication.Commands.Login;
 using Conduit.Application.Features.Authentication.Commands.Logout;
 using Conduit.Application.Features.Authentication.Commands.VerifyLogin;
+using Conduit.Application.Features.Authentication.Commands.VerifyNonce;
 using Conduit.Application.Features.Authentication.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -50,6 +51,24 @@ internal sealed class IdentityEndpoints : IEndpoint
         })
         .Produces<VerifyLoginDto>()
         .Accepts<VerifyLoginRequest>("application/json")
+        .ProducesProblem(StatusCodes.Status400BadRequest);
+
+        group.MapPost("verify-nonce", async (
+                [FromServices] ISender sender,
+                [FromBody] VerifyNonceRequest req,
+                CancellationToken ct) =>
+        {
+            var result = await sender.Send(new VerifyNonceCommand
+            {
+                UserId = req.UserId,
+                NonceId = req.NonceId,
+                DeviceId = req.DeviceId,
+                Nonce = req.Nonce
+            }, ct);
+            return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
+        })
+        .Produces<VerifyNonceDto>()
+        .Accepts<VerifyNonceRequest>("application/json")
         .ProducesProblem(StatusCodes.Status400BadRequest);
 
         group.MapGet("nonce", async (
