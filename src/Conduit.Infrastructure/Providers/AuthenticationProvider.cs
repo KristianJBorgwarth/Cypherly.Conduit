@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using Conduit.Application.Contracts.Providers;
 using Conduit.Application.Features.Authentication.Commands.Login;
 using Conduit.Application.Features.Authentication.Commands.VerifyLogin;
+using Conduit.Application.Features.Authentication.Queries;
 using Conduit.Domain.Common;
 using Conduit.Infrastructure.Constants;
 using Conduit.Infrastructure.Extensions;
@@ -11,9 +12,11 @@ namespace Conduit.Infrastructure.Providers;
 
 internal sealed class AuthenticationProvider(
     IHttpClientFactory clientFactory,
-    ILogger<AuthenticationProvider> logger) : IIdentityProvider
+    ILogger<AuthenticationProvider> logger)
+    : IIdentityProvider
 {
     private readonly HttpClient _client = clientFactory.CreateClient(ClientNames.IdentityClient);
+
 
     public async Task<Result<LoginDto>> LoginAsync(string email, string password, CancellationToken ct = default)
     {
@@ -30,7 +33,7 @@ internal sealed class AuthenticationProvider(
 
     public async Task<Result> LogoutAsync(CancellationToken ct = default)
     {
-        var response = await _client.PostAsJsonAsync("logout", ct);
+        var response = await _client.PostAsync("logout", null, ct);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -41,9 +44,9 @@ internal sealed class AuthenticationProvider(
         return Result.Ok();
     }
 
-    public async Task<Result<VerifyLoginDto>> VerifyLoginAsync(string loginVerificationCode, CancellationToken ct = default)
+    public async Task<Result<VerifyLoginDto>> VerifyLoginAsync(Guid userId, string loginVerificationCode, CancellationToken ct = default)
     {
-        var response = await _client.PostAsJsonAsync("verify-login", new { LoginVerificationCode = loginVerificationCode }, ct);
+        var response = await _client.PostAsJsonAsync("verify-login", new { UserId = userId, LoginVerificationCode = loginVerificationCode }, ct);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -53,4 +56,19 @@ internal sealed class AuthenticationProvider(
 
         return await response.GetValueFromEnvelopeAsync<VerifyLoginDto>(ct);
     }
+
+    public async Task<Result<GetNonceDto>> GetNonceAsync(Guid userId, Guid deviceId, CancellationToken ct = default)
+    {
+        var response = await _client.GetAsync($"nonce?userId={userId}&deviceId={deviceId}", ct);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("IdentityClient failed with status code {ResponseStatusCode}", response.StatusCode);
+            return await response.ToFailureResultAsync<GetNonceDto>(ct);
+        }
+
+        return await response.GetValueFromEnvelopeAsync<GetNonceDto>(ct);
+        
+    }
+
 }
