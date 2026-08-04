@@ -19,7 +19,6 @@ internal sealed class AuthenticationProvider(
 {
     private readonly HttpClient _client = clientFactory.CreateClient(ClientNames.IdentityClient);
 
-
     public async Task<Result<LoginDto>> LoginAsync(string email, string password, CancellationToken ct = default)
     {
         var response = await _client.PostAsJsonAsync("login", new { Email = email, Password = password }, ct);
