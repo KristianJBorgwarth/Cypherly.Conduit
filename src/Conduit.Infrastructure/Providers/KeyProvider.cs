@@ -25,6 +25,9 @@ internal sealed class KeyProvider(
         byte[] signedPreKeySignature,
         IReadOnlyCollection<PreKey> preKeys,
         DateTimeOffset signedPreKeyTimestamp,
+        int kyberPreKeyId,
+        byte[] kyberPreKeyPublic,
+        byte[] kyberPreKeySignature,
         CancellationToken ct = default)
     {
         var response = await _client.PostAsJsonAsync(
@@ -38,7 +41,10 @@ internal sealed class KeyProvider(
                 SignedPreKeyPublic = signedPreKeyPublic,
                 PreKeys = preKeys,
                 SignedPreKeySignature = signedPreKeySignature,
-                SignedPreKeyTimestamp = signedPreKeyTimestamp
+                SignedPreKeyTimestamp = signedPreKeyTimestamp,
+                KyberPreKeyId = kyberPreKeyId,
+                KyberPreKeyPublic = kyberPreKeyPublic,
+                KyberPreKeySignature = kyberPreKeySignature
             },
             ct);
 

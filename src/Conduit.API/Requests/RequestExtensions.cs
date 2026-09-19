@@ -14,6 +14,9 @@ internal static class RequestExtensions
             SignedPreKeyPublic = req.SignedPreKeyPublic,
             SignedPreKeySignature = req.SignedPreKeySignature,
             PreKeys = req.PreKeys,
-            SignedPreKeyTimestamp = req.SignedPreKeyTimestamp
+            SignedPreKeyTimestamp = req.SignedPreKeyTimestamp,
+            KyberPreKeyId = req.KyberPreKeyId,
+            KyberPreKeyPublic = req.KyberPreKeyPublic,
+            KyberPreKeySignature = req.KyberPreKeySignature
         };
 }

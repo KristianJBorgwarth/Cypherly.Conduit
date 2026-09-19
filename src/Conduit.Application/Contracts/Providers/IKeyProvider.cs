@@ -15,6 +15,9 @@ public interface IKeyProvider
         byte[] signedPreKeySignature,
         IReadOnlyCollection<PreKey> preKeys,
         DateTimeOffset signedPreKeyTimestamp,
+        int kyberPreKeyId,
+        byte[] kyberPreKeyPublic,
+        byte[] kyberPreKeySignature,
         CancellationToken ct = default);
 
     Task<Result> UploadOneTimePreKeysAsync(IReadOnlyCollection<PreKey> preKeys, CancellationToken ct = default);
