@@ -8,4 +8,7 @@ public sealed record SessionKeysDto
     public required byte[] SignedPreKeyPublic { get; init; }
     public required byte[] SignedPreKeySignature { get; init; }
     public required PreKeyDto? PreKey { get; init; }
+    public required int KyberPreKeyId { get; init; }
+    public required byte[] KyberPreKeyPublic { get; init; }
+    public required byte[] KyberPreKeySignature { get; init; }
 }

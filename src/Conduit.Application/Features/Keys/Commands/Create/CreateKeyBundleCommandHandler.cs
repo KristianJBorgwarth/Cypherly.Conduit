@@ -17,6 +17,9 @@ public sealed class CreateKeyBundleCommandHandler(IKeyProvider keyProvider) : IC
             request.SignedPreKeySignature,
             request.PreKeys,
             request.SignedPreKeyTimestamp,
+            request.KyberPreKeyId,
+            request.KyberPreKeyPublic,
+            request.KyberPreKeySignature,
             cancellationToken);
     }
 }

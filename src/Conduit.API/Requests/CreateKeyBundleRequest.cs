@@ -12,5 +12,8 @@ public sealed class CreateKeyBundleRequest
     public required byte[] SignedPreKeySignature { get; init; }
     public required IReadOnlyCollection<PreKey> PreKeys { get; init; }
     public required DateTimeOffset SignedPreKeyTimestamp { get; init; }
+    public required int KyberPreKeyId { get; init; }
+    public required byte[] KyberPreKeyPublic { get; init; }
+    public required byte[] KyberPreKeySignature { get; init; }
 }
 
