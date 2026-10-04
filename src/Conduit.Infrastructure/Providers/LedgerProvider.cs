@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using Conduit.Application.Contracts.Providers;
+using Conduit.Application.Features.Ledger.Dtos;
 using Conduit.Domain.Common;
 using Conduit.Infrastructure.Constants;
 using Conduit.Infrastructure.Extensions;
@@ -103,5 +104,43 @@ internal sealed class LedgerProvider(
         }
 
         return Result.Ok();
+    }
+
+    public async Task<Result<LedgerEventsDto>> GetEventsAsync(
+        Guid ledgerId,
+        int fromVersion,
+        int? limit,
+        CancellationToken ct = default)
+    {
+        var query = limit is null ? $"fromVersion={fromVersion}" : $"fromVersion={fromVersion}&limit={limit}";
+
+        var response = await _client.GetAsync($"streams/{ledgerId}/events?{query}", ct);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("LedgerClient failed with status code {ResponseStatusCode}", response.StatusCode);
+            return await response.ToFailureResultAsync<LedgerEventsDto>(ct, fromDetails: true);
+        }
+
+        var events = await response.Content.ReadFromJsonAsync<LedgerEventsDto>(cancellationToken: ct)
+            ?? throw new InvalidOperationException("Response content is null");
+
+        return Result.Ok(events);
+    }
+
+    public async Task<Result<LedgerHeadDto>> GetHeadAsync(Guid ledgerId, CancellationToken ct = default)
+    {
+        var response = await _client.GetAsync($"streams/{ledgerId}/head", ct);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("LedgerClient failed with status code {ResponseStatusCode}", response.StatusCode);
+            return await response.ToFailureResultAsync<LedgerHeadDto>(ct, fromDetails: true);
+        }
+
+        var head = await response.Content.ReadFromJsonAsync<LedgerHeadDto>(cancellationToken: ct)
+            ?? throw new InvalidOperationException("Response content is null");
+
+        return Result.Ok(head);
     }
 }

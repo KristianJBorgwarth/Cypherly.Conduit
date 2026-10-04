@@ -3,6 +3,9 @@ using Conduit.API.Requests;
 using Conduit.Application.Features.Ledger.Commands.Append;
 using Conduit.Application.Features.Ledger.Commands.Archive;
 using Conduit.Application.Features.Ledger.Commands.Create;
+using Conduit.Application.Features.Ledger.Dtos;
+using Conduit.Application.Features.Ledger.Queries.GetEvents;
+using Conduit.Application.Features.Ledger.Queries.GetHead;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -86,5 +89,37 @@ internal sealed class LedgerEndpoints : IEndpoint
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status409Conflict);
+
+        group.MapGet("/streams/{id:guid}/events", async (
+                [FromRoute] Guid id,
+                [FromQuery] int? fromVersion,
+                [FromQuery] int? limit,
+                ISender sender,
+                CancellationToken ct) =>
+            {
+                var result = await sender.Send(new GetLedgerEventsQuery
+                {
+                    LedgerId = id,
+                    FromVersion = fromVersion ?? 1,
+                    Limit = limit
+                }, ct);
+
+                return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
+            })
+            .Produces<LedgerEventsDto>(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status404NotFound);
+
+        group.MapGet("/streams/{id:guid}/head", async (
+                [FromRoute] Guid id,
+                ISender sender,
+                CancellationToken ct) =>
+            {
+                var result = await sender.Send(new GetLedgerHeadQuery { LedgerId = id }, ct);
+
+                return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
+            })
+            .Produces<LedgerHeadDto>(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status404NotFound);
     }
 }
