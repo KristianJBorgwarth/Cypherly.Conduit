@@ -1,5 +1,6 @@
 using Conduit.API.Common;
 using Conduit.API.Requests;
+using Conduit.Application.Features.Ledger.Commands.Append;
 using Conduit.Application.Features.Ledger.Commands.Create;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,32 @@ internal sealed class LedgerEndpoints : IEndpoint
             .Produces(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status409Conflict);
+
+        group.MapPut("/streams/{id:guid}/events", async (
+                [FromRoute] Guid id,
+                [FromBody] AppendLedgerEventRequest req,
+                ISender sender,
+                CancellationToken ct) =>
+            {
+                var result = await sender.Send(new AppendLedgerEventCommand
+                {
+                    LedgerId = id,
+                    ExpectedVersion = req.ExpectedVersion,
+                    PreviousHash = req.PreviousHash,
+                    Payload = req.Payload,
+                    WriteKeyPublic = req.WriteKeyPublic,
+                    Signature = req.Signature,
+                    KeysAdded = req.KeysAdded,
+                    KeysRemoved = req.KeysRemoved
+                }, ct);
+
+                return result.Success ? Results.Ok() : result.ToProblemDetails();
+            })
+            .Produces(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status409Conflict);
     }
 }

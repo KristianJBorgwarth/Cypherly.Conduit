@@ -10,4 +10,15 @@ public interface ILedgerProvider
         byte[] writeKey,
         byte[] signature,
         CancellationToken ct = default);
+
+    Task<Result> AppendEventAsync(
+        Guid ledgerId,
+        int expectedVersion,
+        byte[] previousHash,
+        byte[] payload,
+        byte[] writeKeyPublic,
+        byte[] signature,
+        IReadOnlyCollection<byte[]> keysAdded,
+        IReadOnlyCollection<byte[]> keysRemoved,
+        CancellationToken ct = default);
 }
