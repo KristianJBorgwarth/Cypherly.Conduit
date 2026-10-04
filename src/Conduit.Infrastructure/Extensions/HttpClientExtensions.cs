@@ -32,6 +32,7 @@ internal static class HttpClientExtensions
         services.AddHttpClient(options, ClientNames.ConnectionIdClient);
         services.AddHttpClient(options, ClientNames.IdentityClient);
         services.AddHttpClient(options, ClientNames.KeyClient);
+        services.AddHttpClient(options, ClientNames.LedgerClient);
     }
     
     private static void RegisterProviders(this IServiceCollection services)
@@ -42,6 +43,7 @@ internal static class HttpClientExtensions
         services.AddScoped<IConnectionIdProvider, ConnectionIdProvider>();
         services.AddScoped<IIdentityProvider, AuthenticationProvider>();
         services.AddScoped<IKeyProvider, KeyProvider>();
+        services.AddScoped<ILedgerProvider, LedgerProvider>();
     }
 
     private static void AddHttpClient(this IServiceCollection services, DownstreamOptions options, string clientName)

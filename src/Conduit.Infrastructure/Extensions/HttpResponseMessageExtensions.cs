@@ -20,6 +20,8 @@ public static class HttpResponseMessageExtensions
             HttpStatusCode.BadRequest => fromDetails ? await HandleBadRequestProblemDetails<T>(response, ct) : await HandleBadRequest<T>(response, ct),
             HttpStatusCode.NotFound   => fromDetails ? await HandleNotFoundProblemDetails<T>(response, ct) : await HandleNotFound<T>(response, ct),
             HttpStatusCode.Unauthorized => Result.Fail<T>(Error.Unauthorized("Request requires user authentication.")),
+            HttpStatusCode.Forbidden => fromDetails ? await HandleProblemDetails<T>(response, ct, Error.Forbidden()) : Result.Fail<T>(Error.Forbidden()),
+            HttpStatusCode.Conflict => fromDetails ? await HandleProblemDetails<T>(response, ct, Error.Conflict()) : Result.Fail<T>(Error.Conflict()),
             HttpStatusCode.InternalServerError => Result.Fail<T>(Error.Failure("An internal server error occurred calling downstream service.")),
             _ => Result.Fail<T>(Error.Failure("An unknown error occured calling downstream service."))
         };
@@ -32,6 +34,8 @@ public static class HttpResponseMessageExtensions
             HttpStatusCode.BadRequest => fromDetails ? await HandleBadRequestProblemDetails(response, ct) : await HandleBadRequest(response, ct),
             HttpStatusCode.NotFound => fromDetails ? await HandleNotFoundProblemDetails(response, ct) : await HandleNotFound(response, ct) ,
             HttpStatusCode.Unauthorized => Result.Fail(Error.Unauthorized("Request requires user authentication.")),
+            HttpStatusCode.Forbidden => fromDetails ? await HandleProblemDetails(response, ct, Error.Forbidden()) : Result.Fail(Error.Forbidden()),
+            HttpStatusCode.Conflict => fromDetails ? await HandleProblemDetails(response, ct, Error.Conflict()) : Result.Fail(Error.Conflict()),
             HttpStatusCode.InternalServerError => Result.Fail(Error.Failure("An internal server error occurred calling downstream service.")),
             _ => Result.Fail(Error.Failure("An unknown error occured calling downstream service."))
         };
@@ -123,6 +127,20 @@ public static class HttpResponseMessageExtensions
         return Result.Fail(error);
     }
     
+    private static async Task<Result<T>> HandleProblemDetails<T>(HttpResponseMessage response, CancellationToken ct, Error fallback)
+    {
+        var problemDetails = await response.Content.ReadFromJsonAsync<ErrorProblemDetails>(cancellationToken: ct);
+
+        return Result.Fail<T>(problemDetails?.Errors?.FirstOrDefault() ?? fallback);
+    }
+
+    private static async Task<Result> HandleProblemDetails(HttpResponseMessage response, CancellationToken ct, Error fallback)
+    {
+        var problemDetails = await response.Content.ReadFromJsonAsync<ErrorProblemDetails>(cancellationToken: ct);
+
+        return Result.Fail(problemDetails?.Errors?.FirstOrDefault() ?? fallback);
+    }
+
     internal class Envelope<T>
     {
         public T Result { get; init; } = default!;
