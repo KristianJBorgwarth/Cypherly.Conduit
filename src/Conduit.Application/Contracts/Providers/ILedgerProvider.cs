@@ -1,3 +1,4 @@
+using Conduit.Application.Features.Ledger.Dtos;
 using Conduit.Domain.Common;
 
 namespace Conduit.Application.Contracts.Providers;
@@ -29,5 +30,11 @@ public interface ILedgerProvider
         byte[] payload,
         byte[] writeKeyPublic,
         byte[] signature,
+        CancellationToken ct = default);
+
+    Task<Result<LedgerEventsDto>> GetEventsAsync(
+        Guid ledgerId,
+        int fromVersion,
+        int? limit,
         CancellationToken ct = default);
 }
