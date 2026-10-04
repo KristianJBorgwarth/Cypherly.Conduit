@@ -127,4 +127,20 @@ internal sealed class LedgerProvider(
 
         return Result.Ok(events);
     }
+
+    public async Task<Result<LedgerHeadDto>> GetHeadAsync(Guid ledgerId, CancellationToken ct = default)
+    {
+        var response = await _client.GetAsync($"streams/{ledgerId}/head", ct);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("LedgerClient failed with status code {ResponseStatusCode}", response.StatusCode);
+            return await response.ToFailureResultAsync<LedgerHeadDto>(ct, fromDetails: true);
+        }
+
+        var head = await response.Content.ReadFromJsonAsync<LedgerHeadDto>(cancellationToken: ct)
+            ?? throw new InvalidOperationException("Response content is null");
+
+        return Result.Ok(head);
+    }
 }

@@ -37,4 +37,6 @@ public interface ILedgerProvider
         int fromVersion,
         int? limit,
         CancellationToken ct = default);
+
+    Task<Result<LedgerHeadDto>> GetHeadAsync(Guid ledgerId, CancellationToken ct = default);
 }
