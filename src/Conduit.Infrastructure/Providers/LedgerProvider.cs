@@ -74,4 +74,34 @@ internal sealed class LedgerProvider(
 
         return Result.Ok();
     }
+
+    public async Task<Result> ArchiveLedgerAsync(
+        Guid ledgerId,
+        int expectedVersion,
+        byte[] previousHash,
+        byte[] payload,
+        byte[] writeKeyPublic,
+        byte[] signature,
+        CancellationToken ct = default)
+    {
+        var response = await _client.PutAsJsonAsync(
+            $"streams/{ledgerId}/archive",
+            new
+            {
+                ExpectedVersion = expectedVersion,
+                PreviousHash = previousHash,
+                Payload = payload,
+                WriteKeyPublic = writeKeyPublic,
+                Signature = signature
+            },
+            ct);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("LedgerClient failed with status code {ResponseStatusCode}", response.StatusCode);
+            return await response.ToFailureResultAsync(ct, fromDetails: true);
+        }
+
+        return Result.Ok();
+    }
 }
