@@ -21,4 +21,13 @@ public interface ILedgerProvider
         IReadOnlyCollection<byte[]> keysAdded,
         IReadOnlyCollection<byte[]> keysRemoved,
         CancellationToken ct = default);
+
+    Task<Result> ArchiveLedgerAsync(
+        Guid ledgerId,
+        int expectedVersion,
+        byte[] previousHash,
+        byte[] payload,
+        byte[] writeKeyPublic,
+        byte[] signature,
+        CancellationToken ct = default);
 }
