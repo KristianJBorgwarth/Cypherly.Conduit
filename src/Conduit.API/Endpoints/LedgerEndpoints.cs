@@ -30,6 +30,7 @@ internal sealed class LedgerEndpoints : IEndpoint
                     LedgerId = req.LedgerId,
                     Payload = req.Payload,
                     WriteKey = req.WriteKey,
+                    KeysAdded = req.KeysAdded,
                     Signature = req.Signature
                 }, ct);
 

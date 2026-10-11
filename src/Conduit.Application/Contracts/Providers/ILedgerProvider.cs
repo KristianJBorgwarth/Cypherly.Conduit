@@ -9,6 +9,7 @@ public interface ILedgerProvider
         Guid ledgerId,
         byte[] payload,
         byte[] writeKey,
+        IReadOnlyCollection<byte[]> keysAdded,
         byte[] signature,
         CancellationToken ct = default);
 
