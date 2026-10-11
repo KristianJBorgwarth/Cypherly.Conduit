@@ -12,6 +12,7 @@ public sealed class CreateLedgerCommandHandler(ILedgerProvider ledgerProvider) :
             request.LedgerId,
             request.Payload,
             request.WriteKey,
+            request.KeysAdded,
             request.Signature,
             cancellationToken);
     }

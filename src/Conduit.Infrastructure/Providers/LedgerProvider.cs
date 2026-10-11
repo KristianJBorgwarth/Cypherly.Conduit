@@ -19,6 +19,7 @@ internal sealed class LedgerProvider(
         Guid ledgerId,
         byte[] payload,
         byte[] writeKey,
+        IReadOnlyCollection<byte[]> keysAdded,
         byte[] signature,
         CancellationToken ct = default)
     {
@@ -29,6 +30,7 @@ internal sealed class LedgerProvider(
                 LedgerId = ledgerId,
                 Payload = payload,
                 WriteKey = writeKey,
+                KeysAdded = keysAdded,
                 Signature = signature
             },
             ct);
