@@ -7,7 +7,7 @@ namespace Conduit.Application.Features.Ledger.Queries.GetEvents;
 
 public sealed class GetLedgerEventsQueryHandler(ILedgerProvider ledgerProvider) : IQueryHandler<GetLedgerEventsQuery, LedgerEventsDto>
 {
-    public async Task<Result<LedgerEventsDto>> Handle(GetLedgerEventsQuery request, CancellationToken cancellationToken)
+    public async ValueTask<Result<LedgerEventsDto>> Handle(GetLedgerEventsQuery request, CancellationToken cancellationToken)
     {
         return await ledgerProvider.GetEventsAsync(
             request.LedgerId,

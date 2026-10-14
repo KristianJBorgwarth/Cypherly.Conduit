@@ -6,7 +6,7 @@ namespace Conduit.Application.Features.Ledger.Commands.Archive;
 
 public sealed class ArchiveLedgerCommandHandler(ILedgerProvider ledgerProvider) : ICommandHandler<ArchiveLedgerCommand>
 {
-    public async Task<Result> Handle(ArchiveLedgerCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(ArchiveLedgerCommand request, CancellationToken cancellationToken)
     {
         return await ledgerProvider.ArchiveLedgerAsync(
             request.LedgerId,

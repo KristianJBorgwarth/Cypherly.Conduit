@@ -5,7 +5,7 @@ using Conduit.Application.Features.Friends.Commands.Create;
 using Conduit.Application.Features.Friends.Commands.Delete;
 using Conduit.Application.Features.Friends.Queries.GetFriendRequests;
 using Conduit.Application.Features.Friends.Queries.GetFriends;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.API.Endpoints;

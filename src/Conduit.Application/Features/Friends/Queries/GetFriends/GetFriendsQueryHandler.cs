@@ -10,7 +10,7 @@ public sealed class GetFriendsQueryHandler(
     IConnectionIdProvider connectionIdProvider)
     : IQueryHandler<GetFriendsQuery, IReadOnlyCollection<GetFriendsDto>>
 {
-    public async Task<Result<IReadOnlyCollection<GetFriendsDto>>> Handle(GetFriendsQuery request, CancellationToken ct)
+    public async ValueTask<Result<IReadOnlyCollection<GetFriendsDto>>> Handle(GetFriendsQuery request, CancellationToken ct)
     {
         var friendsResult = await friendProvider.GetFriendsAsync(ct);
         if (!friendsResult.Success) return Result.Fail<IReadOnlyCollection<GetFriendsDto>>(friendsResult.Error);

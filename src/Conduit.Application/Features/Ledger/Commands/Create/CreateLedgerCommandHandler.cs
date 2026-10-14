@@ -6,7 +6,7 @@ namespace Conduit.Application.Features.Ledger.Commands.Create;
 
 public sealed class CreateLedgerCommandHandler(ILedgerProvider ledgerProvider) : ICommandHandler<CreateLedgerCommand>
 {
-    public async Task<Result> Handle(CreateLedgerCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(CreateLedgerCommand request, CancellationToken cancellationToken)
     {
         return await ledgerProvider.CreateLedgerAsync(
             request.LedgerId,

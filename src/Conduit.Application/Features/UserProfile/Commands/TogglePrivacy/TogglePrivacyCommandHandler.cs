@@ -6,8 +6,8 @@ namespace Conduit.Application.Features.UserProfile.Commands.TogglePrivacy;
 
 public sealed class TogglePrivacyCommandHandler(IUserProfileSettingsProvider userProfileSettingsProvider) : ICommandHandler<TogglePrivacyCommand>
 {
-    public Task<Result> Handle(TogglePrivacyCommand request, CancellationToken cancellationToken)
+    public ValueTask<Result> Handle(TogglePrivacyCommand request, CancellationToken cancellationToken)
     {
-        return userProfileSettingsProvider.TogglePrivacy(request.IsPrivate, cancellationToken);
+        return new ValueTask<Result>(userProfileSettingsProvider.TogglePrivacy(request.IsPrivate, cancellationToken));
     }
 }

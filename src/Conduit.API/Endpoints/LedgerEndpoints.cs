@@ -6,7 +6,7 @@ using Conduit.Application.Features.Ledger.Commands.Create;
 using Conduit.Application.Features.Ledger.Dtos;
 using Conduit.Application.Features.Ledger.Queries.GetEvents;
 using Conduit.Application.Features.Ledger.Queries.GetHead;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.API.Endpoints;

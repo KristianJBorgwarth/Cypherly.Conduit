@@ -4,7 +4,7 @@ using Conduit.Application.Features.UserProfile.Commands.UpdateAvatar;
 using Conduit.Application.Features.UserProfile.Commands.UpdateDisplayName;
 using Conduit.Application.Features.UserProfile.Queries.GetUserProfile;
 using Conduit.Application.Features.UserProfile.Queries.GetUserProfileByTag;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.API.Endpoints;
