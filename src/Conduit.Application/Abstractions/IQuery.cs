@@ -1,5 +1,5 @@
 ﻿using Conduit.Domain.Common;
-using MediatR;
+using Mediator;
 
 namespace Conduit.Application.Abstractions;
 

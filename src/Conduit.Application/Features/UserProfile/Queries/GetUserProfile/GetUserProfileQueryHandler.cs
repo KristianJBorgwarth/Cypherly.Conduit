@@ -9,7 +9,7 @@ public sealed class GetUserProfileQueryHandler(
     IConnectionIdProvider connectionIdProvider)
     : IQueryHandler<GetUserProfileQuery, GetUserProfileDto>
 {
-    public async Task<Result<GetUserProfileDto>> Handle(GetUserProfileQuery request,
+    public async ValueTask<Result<GetUserProfileDto>> Handle(GetUserProfileQuery request,
         CancellationToken cancellationToken)
     {
         var profileResult = await userProfileProvider.GetUserProfile(cancellationToken);

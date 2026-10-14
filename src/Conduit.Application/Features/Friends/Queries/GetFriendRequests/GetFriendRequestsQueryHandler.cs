@@ -6,7 +6,7 @@ namespace Conduit.Application.Features.Friends.Queries.GetFriendRequests;
 
 public sealed class GetFriendRequestsQueryHandler(IFriendProvider friendProvider) : IQueryHandler<GetFriendRequestsQuery, IReadOnlyCollection<GetFriendRequestsDto>>
 {
-    public async Task<Result<IReadOnlyCollection<GetFriendRequestsDto>>> Handle(GetFriendRequestsQuery request, CancellationToken cancellationToken)
+    public async ValueTask<Result<IReadOnlyCollection<GetFriendRequestsDto>>> Handle(GetFriendRequestsQuery request, CancellationToken cancellationToken)
     {
         var friendRequests = await friendProvider.GetFriendRequestsAsync(cancellationToken);
         return Result.Ok(friendRequests);

@@ -6,7 +6,7 @@ using Conduit.Application.Features.Authentication.Commands.RefreshTokens;
 using Conduit.Application.Features.Authentication.Commands.VerifyLogin;
 using Conduit.Application.Features.Authentication.Commands.VerifyNonce;
 using Conduit.Application.Features.Authentication.Queries;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.API.Endpoints;

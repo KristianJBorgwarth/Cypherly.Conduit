@@ -8,6 +8,6 @@ public sealed class UpdateAvatarCommandHandler(
     IUserProfileSettingsProvider upsp) 
     : ICommandHandler<UpdateAvatarcommand, UpdateAvatarDto>
 {
-    public async Task<Result<UpdateAvatarDto>> Handle(UpdateAvatarcommand cmd, CancellationToken ct) 
+    public async ValueTask<Result<UpdateAvatarDto>> Handle(UpdateAvatarcommand cmd, CancellationToken ct) 
         => await upsp.UpdateAvatar(cmd.Avatar, ct);
 }

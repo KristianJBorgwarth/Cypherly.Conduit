@@ -6,7 +6,7 @@ namespace Conduit.Application.Features.Ledger.Commands.Append;
 
 public sealed class AppendLedgerEventCommandHandler(ILedgerProvider ledgerProvider) : ICommandHandler<AppendLedgerEventCommand>
 {
-    public async Task<Result> Handle(AppendLedgerEventCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(AppendLedgerEventCommand request, CancellationToken cancellationToken)
     {
         return await ledgerProvider.AppendEventAsync(
             request.LedgerId,

@@ -1,6 +1,6 @@
 using Conduit.Application.Behavior;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Conduit.Application.Extensions;
@@ -12,11 +12,11 @@ public static class ApplicationExtensions
         var assembly = typeof(ApplicationExtensions).Assembly;
         
         services.AddValidatorsFromAssembly(assembly);
-        services.AddMediatR(cfg =>
+        // Options are read by the source generator at compile time, so they must stay inline constants
+        services.AddMediator(options =>
         {
-            cfg.RegisterServicesFromAssembly(assembly);
+            options.ServiceLifetime = ServiceLifetime.Scoped;
+            options.PipelineBehaviors = [typeof(ValidationBehavior<,>), typeof(ExceptionBehavior<,>)];
         });
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ExceptionBehavior<,>));
     }
 }

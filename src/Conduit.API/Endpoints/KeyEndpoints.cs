@@ -3,7 +3,7 @@ using Conduit.API.Requests;
 using Conduit.Application.Features.Keys.Commands.UploadOneTimePreKeys;
 using Conduit.Application.Features.Keys.Dtos;
 using Conduit.Application.Features.Keys.Queries;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.API.Endpoints;

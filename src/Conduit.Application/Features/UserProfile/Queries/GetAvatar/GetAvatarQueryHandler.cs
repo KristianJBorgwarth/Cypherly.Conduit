@@ -8,6 +8,6 @@ namespace Conduit.Application.Features.UserProfile.Queries.GetAvatar
         IUserProfileSettingsProvider uspProvider)
         : IQueryHandler<GetAvatarQuery, Avatar>
     {
-        public Task<Result<Avatar>> Handle(GetAvatarQuery q, CancellationToken ct) => uspProvider.GetAvatar(q.FileKey, ct);
+        public ValueTask<Result<Avatar>> Handle(GetAvatarQuery q, CancellationToken ct) => new(uspProvider.GetAvatar(q.FileKey, ct));
     }
 }
