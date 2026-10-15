@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using Conduit.Domain.Common;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,6 +39,43 @@ public static class HttpResponseMessageExtensions
             _ => Result.Fail(Error.Failure("An unknown error occured calling downstream service."))
         };
     }
+
+    public static async Task<Result<T>> ToPassthroughFailureResultAsync<T>(this HttpResponseMessage response, CancellationToken ct = default)
+    {
+        return Result.Fail<T>(await ReadDownstreamErrorAsync(response, ct));
+    }
+
+    public static async Task<Result> ToPassthroughFailureResultAsync(this HttpResponseMessage response, CancellationToken ct = default)
+    {
+        return Result.Fail(await ReadDownstreamErrorAsync(response, ct));
+    }
+
+    private static async Task<Error> ReadDownstreamErrorAsync(HttpResponseMessage response, CancellationToken ct)
+    {
+        ErrorProblemDetails? problemDetails = null;
+
+        try
+        {
+            problemDetails = await response.Content.ReadFromJsonAsync<ErrorProblemDetails>(cancellationToken: ct);
+        }
+        catch (Exception ex) when (ex is JsonException or NotSupportedException)
+        {
+        }
+
+        return problemDetails?.Errors?.FirstOrDefault()
+               ?? new Error("downstream.error", ToErrorType(response.StatusCode), problemDetails?.Detail ?? problemDetails?.Title ?? "An error occurred.");
+    }
+
+    private static ErrorType ToErrorType(HttpStatusCode statusCode) => statusCode switch
+    {
+        HttpStatusCode.BadRequest => ErrorType.BadRequest,
+        HttpStatusCode.NotFound => ErrorType.NotFound,
+        HttpStatusCode.Unauthorized => ErrorType.Unauthorized,
+        HttpStatusCode.Forbidden => ErrorType.Forbidden,
+        HttpStatusCode.Conflict => ErrorType.Conflict,
+        HttpStatusCode.TooManyRequests => ErrorType.TooManyRequests,
+        _ => ErrorType.Failure
+    };
 
     public static async Task<T> GetValueAsync<T>(this HttpResponseMessage response, CancellationToken ct = default)
     {
