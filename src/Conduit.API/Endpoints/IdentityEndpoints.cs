@@ -1,11 +1,15 @@
 using Conduit.API.Common;
 using Conduit.API.Requests;
+using Conduit.Application.Features.Account.Commands.Register;
+using Conduit.Application.Features.Account.Commands.ResendVerificationCode;
+using Conduit.Application.Features.Account.Commands.Verify;
 using Conduit.Application.Features.Authentication.Commands.Login;
 using Conduit.Application.Features.Authentication.Commands.Logout;
 using Conduit.Application.Features.Authentication.Commands.RefreshTokens;
 using Conduit.Application.Features.Authentication.Commands.VerifyLogin;
 using Conduit.Application.Features.Authentication.Commands.VerifyNonce;
 using Conduit.Application.Features.Authentication.Queries;
+using Conduit.Application.Features.Device.Commands.Create;
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
 
@@ -100,5 +104,78 @@ internal sealed class IdentityEndpoints : IEndpoint
          })
          .Produces<GetNonceDto>()
          .ProducesProblem(StatusCodes.Status400BadRequest);
+
+        var user = group.MapGroup("user");
+
+        user.MapPost("", async (
+                [FromServices] ISender sender,
+                [FromBody] RegisterRequest req,
+                CancellationToken ct) =>
+        {
+            var result = await sender.Send(new RegisterCommand { Username = req.Username, Email = req.Email, Password = req.Password }, ct);
+            return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
+        })
+        .Produces<RegisterDto>()
+        .Accepts<RegisterRequest>("application/json")
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status409Conflict);
+
+        user.MapPut("verify", async (
+                [FromServices] ISender sender,
+                [FromBody] VerifyAccountRequest req,
+                CancellationToken ct) =>
+        {
+            var result = await sender.Send(new VerifyAccountCommand { UserId = req.UserId, VerificationCode = req.VerificationCode }, ct);
+            return result.Success ? Results.Ok() : result.ToProblemDetails();
+        })
+        .Produces(StatusCodes.Status200OK)
+        .Accepts<VerifyAccountRequest>("application/json")
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .ProducesProblem(StatusCodes.Status429TooManyRequests);
+
+        user.MapPut("resend-verification", async (
+                [FromServices] ISender sender,
+                [FromBody] ResendVerificationCodeRequest req,
+                CancellationToken ct) =>
+        {
+            var result = await sender.Send(new ResendVerificationCodeCommand
+            {
+                UserId = req.UserId,
+                CodeType = req.CodeType,
+                NonceId = req.NonceId,
+                Nonce = req.Nonce
+            }, ct);
+            return result.Success ? Results.Ok() : result.ToProblemDetails();
+        })
+        .Produces(StatusCodes.Status200OK)
+        .Accepts<ResendVerificationCodeRequest>("application/json")
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status401Unauthorized)
+        .ProducesProblem(StatusCodes.Status404NotFound)
+        .ProducesProblem(StatusCodes.Status429TooManyRequests);
+
+        user.MapPost("device", async (
+                [FromServices] ISender sender,
+                [FromBody] CreateDeviceRequest req,
+                CancellationToken ct) =>
+        {
+            var result = await sender.Send(new CreateDeviceCommand
+            {
+                UserId = req.UserId,
+                LoginNonceId = req.LoginNonceId,
+                LoginNonce = req.LoginNonce,
+                DeviceAppVersion = req.DeviceAppVersion,
+                DeviceType = req.DeviceType,
+                DevicePlatform = req.DevicePlatform,
+                Base64DevicePublicKey = req.Base64DevicePublicKey
+            }, ct);
+            return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
+        })
+        .Produces<CreateDeviceDto>()
+        .Accepts<CreateDeviceRequest>("application/json")
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status401Unauthorized)
+        .ProducesProblem(StatusCodes.Status404NotFound);
     }
 }

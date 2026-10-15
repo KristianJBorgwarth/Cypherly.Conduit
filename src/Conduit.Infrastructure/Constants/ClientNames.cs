@@ -5,6 +5,7 @@ internal static class ClientNames
     public const string UserProfileClient = "social.userprofile.svc";
     public const string ConnectionIdClient = "identity.connectionid.svc";
     public const string IdentityClient = "identity.authentication.svc";
+    public const string IdentityUserClient = "identity.user.svc";
     public const string KeyClient = "keystore.svc";
     public const string LedgerClient = "ledger.svc";
 }
