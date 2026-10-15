@@ -35,5 +35,10 @@ public enum ErrorType
     /// <summary>
     /// Indicates that the caller is authenticated but not allowed to perform the action.
     /// </summary>
-    Forbidden = 7 // 403 Forbidden
+    Forbidden = 7, // 403 Forbidden
+
+    /// <summary>
+    /// Indicates that the caller has sent too many requests in a given amount of time.
+    /// </summary>
+    TooManyRequests = 8 // 429 Too Many Requests
 }

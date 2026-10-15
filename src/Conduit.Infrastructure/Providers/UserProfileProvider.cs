@@ -26,7 +26,7 @@ internal sealed class UserProfileProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("Failed to get user profile: {ResponseReasonPhrase}", response.ReasonPhrase);
-            return await response.ToFailureResultAsync<UserProfile>(ct, fromDetails: true);
+            return await response.ToFailureResultAsync<UserProfile>(ct);
         }
 
         var value = await response.Content.ReadFromJsonAsync<UserProfile>(cancellationToken: ct)
@@ -42,7 +42,7 @@ internal sealed class UserProfileProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("Failed to get user profile by tag: {ResponseReasonPhrase}", response.ReasonPhrase);
-            return await response.ToFailureResultAsync<GetUserProfileByTagDto>(ct, fromDetails: true);
+            return await response.ToFailureResultAsync<GetUserProfileByTagDto>(ct);
         }
 
         if (response.StatusCode == HttpStatusCode.NoContent) return Result.Ok<GetUserProfileByTagDto>();
@@ -58,7 +58,7 @@ internal sealed class UserProfileProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("Failed to update display name: {ResponseReasonPhrase}", response.ReasonPhrase);
-            return await response.ToFailureResultAsync<string>(ct, fromDetails: true);
+            return await response.ToFailureResultAsync<string>(ct);
         }
 
         var value = await response.Content.ReadFromJsonAsync<string>(cancellationToken: ct)

@@ -15,6 +15,7 @@ public static class ErrorTypeExtensions
             ErrorType.BadRequest => StatusCodes.Status400BadRequest,
             ErrorType.Conflict => StatusCodes.Status409Conflict,
             ErrorType.Forbidden => StatusCodes.Status403Forbidden,
+            ErrorType.TooManyRequests => StatusCodes.Status429TooManyRequests,
             _ => StatusCodes.Status500InternalServerError
         };
     }
@@ -30,6 +31,7 @@ public static class ErrorTypeExtensions
             ErrorType.BadRequest => "Bad Request",
             ErrorType.Conflict => "Conflict",
             ErrorType.Forbidden => "Forbidden",
+            ErrorType.TooManyRequests => "Too Many Requests",
             _ => "Internal Server Error"
         };
     }
@@ -45,6 +47,7 @@ public static class ErrorTypeExtensions
             ErrorType.BadRequest => "https://tools.ietf.org/html/rfc7231#section-6.5.1",  // 400
             ErrorType.Conflict => "https://tools.ietf.org/html/rfc7231#section-6.5.8",    // 409
             ErrorType.Forbidden => "https://tools.ietf.org/html/rfc7231#section-6.5.3",   // 403
+            ErrorType.TooManyRequests => "https://tools.ietf.org/html/rfc6585#section-4",   // 429
             _ => "https://tools.ietf.org/html/rfc7231#section-6.6.1", // 500
         };
     }

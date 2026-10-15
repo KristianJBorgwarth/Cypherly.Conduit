@@ -25,7 +25,7 @@ internal sealed class FriendProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("FriendClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync<IReadOnlyCollection<Friend>>(ct, fromDetails: true);
+            return await response.ToFailureResultAsync<IReadOnlyCollection<Friend>>(ct);
         }
 
         if (response.StatusCode == HttpStatusCode.NoContent) return Result.Ok<IReadOnlyCollection<Friend>>([]);
@@ -40,7 +40,7 @@ internal sealed class FriendProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("FriendClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync(ct, fromDetails: true);
+            return await response.ToFailureResultAsync(ct);
         }
         return Result.Ok();
     }
@@ -51,7 +51,7 @@ internal sealed class FriendProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("FriendClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync<IReadOnlyCollection<GetFriendRequestsDto>>(ct, fromDetails: true);
+            return await response.ToFailureResultAsync<IReadOnlyCollection<GetFriendRequestsDto>>(ct);
         }
         if (response.StatusCode == HttpStatusCode.NoContent) return Result.Ok<IReadOnlyCollection<GetFriendRequestsDto>>([]);
         var value = await response.Content.ReadFromJsonAsync<GetFriendRequestsDto[]>(cancellationToken: ct)
@@ -64,12 +64,12 @@ internal sealed class FriendProvider(
         var encodedTag = Uri.EscapeDataString(friendTag);
         var response = await _client.DeleteAsync($"friendship/delete?friendtag={encodedTag}", ct);
 
-        return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct, fromDetails: true);
+        return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct);
     }
 
     public async Task<Result> BlockUserAsync(string userTag, CancellationToken ct = default)
     {
         var response = await _client.PostAsJsonAsync("friendship/block-user", new { BlockedUserTag = userTag }, ct);
-        return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct, fromDetails: true);
+        return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct);
     }
 }

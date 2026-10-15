@@ -32,7 +32,7 @@ internal sealed class UserProfileSettingsProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("Failed to update profile picture: {ResponseReasonPhrase}", response.ReasonPhrase);
-            return await response.ToFailureResultAsync<UpdateAvatarDto>(ct, fromDetails: true);
+            return await response.ToFailureResultAsync<UpdateAvatarDto>(ct);
         }
 
         var value = await response.Content.ReadFromJsonAsync<UpdateAvatarDto>(cancellationToken: ct)
@@ -51,7 +51,7 @@ internal sealed class UserProfileSettingsProvider(
         else if (!response.IsSuccessStatusCode)
         {
             logger.LogError("Failed to get avatar: {ResponseReasonPhrase}", response.ReasonPhrase);
-            return await response.ToFailureResultAsync<Avatar>(ct, fromDetails: true);
+            return await response.ToFailureResultAsync<Avatar>(ct);
         }
 
         var stream = await response.Content.ReadAsStreamAsync(ct);
@@ -69,6 +69,6 @@ internal sealed class UserProfileSettingsProvider(
     public async Task<Result> TogglePrivacy(bool isPrivate, CancellationToken ct = default)
     {
         var response = await _client.PostAsJsonAsync("toggle-privacy", new { IsPrivate = isPrivate }, ct);
-        return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct, fromDetails: true);
+        return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct);
     }
 }

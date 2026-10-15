@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Json;
-using System.Text.Json;
 using Conduit.Domain.Common;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,80 +9,43 @@ namespace Conduit.Infrastructure.Extensions;
 
 public static class HttpResponseMessageExtensions
 {
-    public static async Task<Result<T>> ToFailureResultAsync<T>(
-        this HttpResponseMessage response,
-        CancellationToken ct = default,
-        bool fromDetails = false)
+    public static async Task<Result<T>> ToFailureResultAsync<T>(this HttpResponseMessage response, CancellationToken ct = default)
     {
         return response.StatusCode switch
         {
-            HttpStatusCode.BadRequest => fromDetails ? await HandleBadRequestProblemDetails<T>(response, ct) : await HandleBadRequest<T>(response, ct),
-            HttpStatusCode.NotFound   => fromDetails ? await HandleNotFoundProblemDetails<T>(response, ct) : await HandleNotFound<T>(response, ct),
+            HttpStatusCode.BadRequest => await HandleBadRequestProblemDetails<T>(response, ct),
+            HttpStatusCode.NotFound => await HandleNotFoundProblemDetails<T>(response, ct),
             HttpStatusCode.Unauthorized => Result.Fail<T>(Error.Unauthorized("Request requires user authentication.")),
-            HttpStatusCode.Forbidden => fromDetails ? await HandleProblemDetails<T>(response, ct, Error.Forbidden()) : Result.Fail<T>(Error.Forbidden()),
-            HttpStatusCode.Conflict => fromDetails ? await HandleProblemDetails<T>(response, ct, Error.Conflict()) : Result.Fail<T>(Error.Conflict()),
+            HttpStatusCode.Forbidden => await HandleProblemDetails<T>(response, ct, Error.Forbidden()),
+            HttpStatusCode.Conflict => await HandleProblemDetails<T>(response, ct, Error.Conflict()),
+            HttpStatusCode.TooManyRequests => await HandleProblemDetails<T>(response, ct, Error.TooManyRequests()),
             HttpStatusCode.InternalServerError => Result.Fail<T>(Error.Failure("An internal server error occurred calling downstream service.")),
             _ => Result.Fail<T>(Error.Failure("An unknown error occured calling downstream service."))
         };
     }
 
-    public static async Task<Result> ToFailureResultAsync(this HttpResponseMessage response, CancellationToken ct = default, bool fromDetails = false)
+    public static async Task<Result> ToFailureResultAsync(this HttpResponseMessage response, CancellationToken ct = default)
     {
         return response.StatusCode switch
         {
-            HttpStatusCode.BadRequest => fromDetails ? await HandleBadRequestProblemDetails(response, ct) : await HandleBadRequest(response, ct),
-            HttpStatusCode.NotFound => fromDetails ? await HandleNotFoundProblemDetails(response, ct) : await HandleNotFound(response, ct) ,
+            HttpStatusCode.BadRequest => await HandleBadRequestProblemDetails(response, ct),
+            HttpStatusCode.NotFound => await HandleNotFoundProblemDetails(response, ct),
             HttpStatusCode.Unauthorized => Result.Fail(Error.Unauthorized("Request requires user authentication.")),
-            HttpStatusCode.Forbidden => fromDetails ? await HandleProblemDetails(response, ct, Error.Forbidden()) : Result.Fail(Error.Forbidden()),
-            HttpStatusCode.Conflict => fromDetails ? await HandleProblemDetails(response, ct, Error.Conflict()) : Result.Fail(Error.Conflict()),
+            HttpStatusCode.Forbidden => await HandleProblemDetails(response, ct, Error.Forbidden()),
+            HttpStatusCode.Conflict => await HandleProblemDetails(response, ct, Error.Conflict()),
+            HttpStatusCode.TooManyRequests => await HandleProblemDetails(response, ct, Error.TooManyRequests()),
             HttpStatusCode.InternalServerError => Result.Fail(Error.Failure("An internal server error occurred calling downstream service.")),
             _ => Result.Fail(Error.Failure("An unknown error occured calling downstream service."))
         };
     }
 
-    public static async Task<T> GetValueFromEnvelopeAsync<T>(this HttpResponseMessage response, CancellationToken ct = default)
+    public static async Task<T> GetValueAsync<T>(this HttpResponseMessage response, CancellationToken ct = default)
     {
-        var envelope = await response.Content.ReadFromJsonAsync<Envelope<T>>(cancellationToken: ct);
-        return envelope is not null ? envelope.Result : throw new InvalidOperationException("Response content cannot be null for a successful result.");
-    }
-    
-    private static async Task<Result<T>> HandleBadRequest<T>(HttpResponseMessage response, CancellationToken ct)
-    {
-        var envelope = await response.Content.ReadFromJsonAsync<Envelope<T>>(cancellationToken: ct);
-
-        if (!string.IsNullOrWhiteSpace(envelope?.ErrorMessage) && envelope.ErrorMessage.Contains("not found", StringComparison.OrdinalIgnoreCase))
-        {
-            return Result.Fail<T>(Error.NotFound(envelope.ErrorMessage ?? $"Entity of type {typeof(T).Name} was not found."));
-        }
-
-        return Result.Fail<T>(Error.BadRequest("Bad.Request", envelope?.ErrorMessage ?? "Bad request."));
+        return await response.Content.ReadFromJsonAsync<T>(cancellationToken: ct)
+               ?? throw new InvalidOperationException("Response content cannot be null for a successful result.");
     }
 
-    private static async Task<Result> HandleBadRequest(HttpResponseMessage response, CancellationToken ct)
-    {
-        var envelope = await response.Content.ReadFromJsonAsync<Envelope>(cancellationToken: ct);
-
-        if (!string.IsNullOrWhiteSpace(envelope?.ErrorMessage) && envelope.ErrorMessage.Contains("not found", StringComparison.OrdinalIgnoreCase))
-        {
-            return Result.Fail(Error.NotFound(envelope.ErrorMessage));
-        }
-
-        return Result.Fail(Error.BadRequest("Bad.Request", envelope?.ErrorMessage ?? "Bad request."));
-    }
-
-    private static async Task<Result<T>> HandleNotFound<T>(HttpResponseMessage response, CancellationToken ct)
-    {
-        var envelope = await response.Content.ReadFromJsonAsync<Envelope>(cancellationToken: ct);
-        return Result.Fail<T>(Error.NotFound(envelope?.ErrorMessage ?? $"Entity of type {typeof(T).Name} was not found."));
-    }
-
-    private static async Task<Result> HandleNotFound(HttpResponseMessage response, CancellationToken ct)
-    {
-        var envelope = await response.Content.ReadFromJsonAsync<Envelope>(cancellationToken: ct);
-        return Result.Fail(Error.NotFound(envelope?.ErrorMessage));
-    }
-    
-    public static async Task<Result<T>> HandleNotFoundProblemDetails<T>(HttpResponseMessage response, CancellationToken ct)
+    private static async Task<Result<T>> HandleNotFoundProblemDetails<T>(HttpResponseMessage response, CancellationToken ct)
     {
         var problemDetails = await response.Content.ReadFromJsonAsync<ErrorProblemDetails>(cancellationToken: ct);
 
@@ -93,8 +55,8 @@ public static class HttpResponseMessageExtensions
 
         return Result.Fail<T>(error);
     }
-    
-    public static async Task<Result<T>> HandleBadRequestProblemDetails<T>(HttpResponseMessage response, CancellationToken ct)
+
+    private static async Task<Result<T>> HandleBadRequestProblemDetails<T>(HttpResponseMessage response, CancellationToken ct)
     {
         var problemDetails = await response.Content.ReadFromJsonAsync<ErrorProblemDetails>(cancellationToken: ct);
 
@@ -139,19 +101,6 @@ public static class HttpResponseMessageExtensions
         var problemDetails = await response.Content.ReadFromJsonAsync<ErrorProblemDetails>(cancellationToken: ct);
 
         return Result.Fail(problemDetails?.Errors?.FirstOrDefault() ?? fallback);
-    }
-
-    internal class Envelope<T>
-    {
-        public T Result { get; init; } = default!;
-        public string? ErrorMessage { get; init; }
-        public required DateTime TimeGenerated { get; init; }
-    }
-
-    internal class Envelope
-    {
-        public string? ErrorMessage { get; init; }
-        public required DateTime TimeGenerated { get; init; }
     }
 
     internal class ErrorProblemDetails : ProblemDetails

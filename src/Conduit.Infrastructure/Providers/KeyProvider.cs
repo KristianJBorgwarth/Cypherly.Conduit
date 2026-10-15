@@ -51,7 +51,7 @@ internal sealed class KeyProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("KeyClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync(ct, fromDetails: true);
+            return await response.ToFailureResultAsync(ct);
         }
 
         return Result.Ok();
@@ -65,7 +65,7 @@ internal sealed class KeyProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("KeyClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync(ct, fromDetails: true);
+            return await response.ToFailureResultAsync(ct);
         }
 
         return Result.Ok();
@@ -79,7 +79,7 @@ internal sealed class KeyProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("KeyClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync<SessionKeysDto>(ct, fromDetails: true);
+            return await response.ToFailureResultAsync<SessionKeysDto>(ct);
         }
 
         var sessionKeys = await response.Content.ReadFromJsonAsync<SessionKeysDto>(cancellationToken: ct)
