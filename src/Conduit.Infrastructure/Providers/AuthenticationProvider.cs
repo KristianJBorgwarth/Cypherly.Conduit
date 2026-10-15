@@ -45,9 +45,9 @@ internal sealed class AuthenticationProvider(
         return Result.Ok();
     }
 
-    public async Task<Result<VerifyLoginDto>> VerifyLoginAsync(Guid userId, string loginVerificationCode, CancellationToken ct = default)
+    public async Task<Result<VerifyLoginDto>> VerifyLoginAsync(Guid userId, string loginVerificationCode, Guid nonceId, string nonce, CancellationToken ct = default)
     {
-        var response = await _client.PostAsJsonAsync("verify-login", new { UserId = userId, LoginVerificationCode = loginVerificationCode }, ct);
+        var response = await _client.PostAsJsonAsync("verify-login", new { UserId = userId, LoginVerificationCode = loginVerificationCode, NonceId = nonceId, Nonce = nonce }, ct);
 
         if (!response.IsSuccessStatusCode)
         {
