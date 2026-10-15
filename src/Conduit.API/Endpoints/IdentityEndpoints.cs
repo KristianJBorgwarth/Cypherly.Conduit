@@ -47,12 +47,13 @@ internal sealed class IdentityEndpoints : IEndpoint
                 [FromBody] VerifyLoginRequest req,
                 CancellationToken ct) =>
         {
-            var result = await sender.Send(new VerifyLoginCommand { UserId = req.UserId, LoginVerificationCode = req.LoginVerificationCode }, ct);
+            var result = await sender.Send(new VerifyLoginCommand { UserId = req.UserId, LoginVerificationCode = req.LoginVerificationCode, NonceId = req.NonceId, Nonce = req.Nonce }, ct);
             return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
         })
         .Produces<VerifyLoginDto>()
         .Accepts<VerifyLoginRequest>("application/json")
-        .ProducesProblem(StatusCodes.Status400BadRequest);
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status401Unauthorized);
 
         group.MapPost("verify-nonce", async (
                 [FromServices] ISender sender,

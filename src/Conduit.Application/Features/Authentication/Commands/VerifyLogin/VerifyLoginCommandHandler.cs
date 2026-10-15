@@ -8,6 +8,6 @@ public sealed class VerifyLoginCommandHandler(IIdentityProvider idProvider) : IC
 {
     public async ValueTask<Result<VerifyLoginDto>> Handle(VerifyLoginCommand cmd, CancellationToken ct)
     {
-        return await idProvider.VerifyLoginAsync(cmd.UserId, cmd.LoginVerificationCode, ct);
+        return await idProvider.VerifyLoginAsync(cmd.UserId, cmd.LoginVerificationCode, cmd.NonceId, cmd.Nonce, ct);
     }
 }

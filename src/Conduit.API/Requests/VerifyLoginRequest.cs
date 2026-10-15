@@ -4,4 +4,6 @@ public sealed record VerifyLoginRequest
 {
     public required Guid UserId { get; init; }
     public required string LoginVerificationCode { get; init; }
+    public required Guid NonceId { get; init; }
+    public required string Nonce { get; init; }
 }
