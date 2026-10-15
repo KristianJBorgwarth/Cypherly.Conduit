@@ -17,4 +17,6 @@ public sealed record Error(string Code, ErrorType Type, string? Description = nu
     public static Error Conflict(string? description = null) => new("conflict", ErrorType.Conflict, description ?? "The request conflicts with the current state.");
 
     public static Error Forbidden(string? description = null) => new("forbidden", ErrorType.Forbidden, description ?? "The caller is not allowed to perform this action.");
+
+    public static Error TooManyRequests(string? description = null) => new("too.many.requests", ErrorType.TooManyRequests, description ?? "Too many requests. Please try again later.");
 }

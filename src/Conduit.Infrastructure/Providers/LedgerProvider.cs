@@ -38,7 +38,7 @@ internal sealed class LedgerProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("LedgerClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync(ct, fromDetails: true);
+            return await response.ToFailureResultAsync(ct);
         }
 
         return Result.Ok();
@@ -72,7 +72,7 @@ internal sealed class LedgerProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("LedgerClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync(ct, fromDetails: true);
+            return await response.ToFailureResultAsync(ct);
         }
 
         return Result.Ok();
@@ -102,7 +102,7 @@ internal sealed class LedgerProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("LedgerClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync(ct, fromDetails: true);
+            return await response.ToFailureResultAsync(ct);
         }
 
         return Result.Ok();
@@ -121,7 +121,7 @@ internal sealed class LedgerProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("LedgerClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync<LedgerEventsDto>(ct, fromDetails: true);
+            return await response.ToFailureResultAsync<LedgerEventsDto>(ct);
         }
 
         var events = await response.Content.ReadFromJsonAsync<LedgerEventsDto>(cancellationToken: ct)
@@ -137,7 +137,7 @@ internal sealed class LedgerProvider(
         if (!response.IsSuccessStatusCode)
         {
             logger.LogError("LedgerClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync<LedgerHeadDto>(ct, fromDetails: true);
+            return await response.ToFailureResultAsync<LedgerHeadDto>(ct);
         }
 
         var head = await response.Content.ReadFromJsonAsync<LedgerHeadDto>(cancellationToken: ct)

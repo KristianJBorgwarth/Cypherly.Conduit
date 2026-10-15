@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net;
+using System.Net.Http.Json;
 using Conduit.Application.Contracts.Providers;
 using Conduit.Domain.Common;
 using Conduit.Infrastructure.Constants;
@@ -24,7 +25,10 @@ internal sealed class ConnectionIdProvider(
             return await response.ToFailureResultAsync<IReadOnlyCollection<Guid>>(ct);
         }
 
-        var value = await response.GetValueFromEnvelopeAsync<ConnectionIdsDto>(ct: CancellationToken.None);
+        if (response.StatusCode == HttpStatusCode.NoContent)
+            return Result.Ok<IReadOnlyCollection<Guid>>([]);
+
+        var value = await response.GetValueAsync<ConnectionIdsDto>(ct: CancellationToken.None);
         return Result.Ok(value.ConnectionIds);
     }
 
@@ -42,7 +46,7 @@ internal sealed class ConnectionIdProvider(
             return await response.ToFailureResultAsync<Dictionary<Guid, IReadOnlyCollection<Guid>>>(ct);
         }
 
-        var value = await response.GetValueFromEnvelopeAsync<MultipleConnectionIds>(ct: CancellationToken.None);
+        var value = await response.GetValueAsync<MultipleConnectionIds>(ct: CancellationToken.None);
         return Result.Ok(value.ConnectionIds);
     }
 

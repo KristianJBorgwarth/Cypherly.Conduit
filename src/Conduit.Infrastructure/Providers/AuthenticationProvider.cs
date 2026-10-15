@@ -29,7 +29,7 @@ internal sealed class AuthenticationProvider(
             return await response.ToFailureResultAsync<LoginDto>(ct);
         }
 
-        return await response.GetValueFromEnvelopeAsync<LoginDto>(ct);
+        return await response.GetValueAsync<LoginDto>(ct);
     }
 
     public async Task<Result> LogoutAsync(CancellationToken ct = default)
@@ -55,7 +55,7 @@ internal sealed class AuthenticationProvider(
             return await response.ToFailureResultAsync<VerifyLoginDto>(ct);
         }
 
-        return await response.GetValueFromEnvelopeAsync<VerifyLoginDto>(ct);
+        return await response.GetValueAsync<VerifyLoginDto>(ct);
     }
 
     public async Task<Result<GetNonceDto>> GetNonceAsync(Guid userId, Guid deviceId, CancellationToken ct = default)
@@ -68,7 +68,7 @@ internal sealed class AuthenticationProvider(
             return await response.ToFailureResultAsync<GetNonceDto>(ct);
         }
 
-        return await response.GetValueFromEnvelopeAsync<GetNonceDto>(ct);
+        return await response.GetValueAsync<GetNonceDto>(ct);
 
     }
 
@@ -82,7 +82,7 @@ internal sealed class AuthenticationProvider(
             return await response.ToFailureResultAsync<VerifyNonceDto>(ct);
         }
 
-        return await response.GetValueFromEnvelopeAsync<VerifyNonceDto>(ct);
+        return await response.GetValueAsync<VerifyNonceDto>(ct);
     }
 
     public async Task<Result<RefreshTokensDto>> RefreshTokensAsync(Guid userId, Guid deviceId, string refreshToken, CancellationToken ct = default)
@@ -95,7 +95,7 @@ internal sealed class AuthenticationProvider(
             return await response.ToFailureResultAsync<RefreshTokensDto>(ct);
         }
 
-        return await response.GetValueFromEnvelopeAsync<RefreshTokensDto>(ct);
+        return await response.GetValueAsync<RefreshTokensDto>(ct);
     }
 
 }
