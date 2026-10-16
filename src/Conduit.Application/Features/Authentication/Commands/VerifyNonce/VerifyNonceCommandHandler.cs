@@ -8,6 +8,6 @@ public sealed class VerifyNonceCommandHandler(IIdentityProvider idProvider) : IC
 {
     public async ValueTask<Result<VerifyNonceDto>> Handle(VerifyNonceCommand cmd, CancellationToken ct)
     {
-        return await idProvider.VerifyNonceAsync(cmd.UserId, cmd.NonceId, cmd.DeviceId, cmd.Nonce, ct);
+        return await idProvider.VerifyNonceAsync(cmd.UserId, cmd.NonceId, cmd.DeviceId, cmd.Nonce, cmd.Announce, ct);
     }
 }

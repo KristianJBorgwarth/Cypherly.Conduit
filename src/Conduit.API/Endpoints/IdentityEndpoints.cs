@@ -69,7 +69,8 @@ internal sealed class IdentityEndpoints : IEndpoint
                 UserId = req.UserId,
                 NonceId = req.NonceId,
                 DeviceId = req.DeviceId,
-                Nonce = req.Nonce
+                Nonce = req.Nonce,
+                Announce = req.Announce
             }, ct);
             return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
         })
