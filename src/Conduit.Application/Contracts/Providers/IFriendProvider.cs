@@ -1,3 +1,4 @@
+using Conduit.Application.Features.Friends.Commands.Accept;
 using Conduit.Application.Features.Friends.Queries.GetFriendRequests;
 using Conduit.Domain.Common;
 using Conduit.Domain.Models;
@@ -10,5 +11,7 @@ public interface IFriendProvider
     Task<Result<IReadOnlyCollection<Friend>>> GetFriendsAsync(CancellationToken ct = default);
     Task<Result<IReadOnlyCollection<GetFriendRequestsDto>>> GetFriendRequestsAsync(CancellationToken ct = default);
     Task<Result> DeleteFriendshipAsync(string friendTag, CancellationToken ct = default);
+    Task<Result<AcceptFriendshipDto>> AcceptFriendshipAsync(string friendTag, CancellationToken ct = default);
+    Task<Result> RejectFriendRequestAsync(string friendTag, CancellationToken ct = default);
     Task<Result> BlockUserAsync(string userTag, CancellationToken ct = default);
 }   

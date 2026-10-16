@@ -3,6 +3,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using Conduit.Application.Contracts.Providers;
+using Conduit.Application.Features.Friends.Commands.Accept;
 using Conduit.Application.Features.Friends.Queries.GetFriendRequests;
 using Conduit.Domain.Common;
 using Conduit.Domain.Models;
@@ -65,6 +66,25 @@ internal sealed class FriendProvider(
         var response = await _client.DeleteAsync($"friendship/delete?friendtag={encodedTag}", ct);
 
         return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct);
+    }
+
+    public async Task<Result> RejectFriendRequestAsync(string friendTag, CancellationToken ct = default)
+    {
+        var encodedTag = Uri.EscapeDataString(friendTag);
+        var response = await _client.DeleteAsync($"friendship/reject?friendtag={encodedTag}", ct);
+
+        return response.IsSuccessStatusCode ? Result.Ok() : await response.ToFailureResultAsync(ct);
+    }
+
+    public async Task<Result<AcceptFriendshipDto>> AcceptFriendshipAsync(string friendTag, CancellationToken ct = default)
+    {
+        var response = await _client.PutAsJsonAsync("friendship/accept", new { FriendTag = friendTag }, ct);
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("FriendClient failed with status code {ResponseStatusCode}", response.StatusCode);
+            return await response.ToFailureResultAsync<AcceptFriendshipDto>(ct);
+        }
+        return await response.GetValueAsync<AcceptFriendshipDto>(ct);
     }
 
     public async Task<Result> BlockUserAsync(string userTag, CancellationToken ct = default)
