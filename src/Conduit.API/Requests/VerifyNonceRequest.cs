@@ -6,4 +6,5 @@ public sealed record VerifyNonceRequest
     public required Guid NonceId { get; init; }
     public required Guid DeviceId { get; init; }
     public required string Nonce { get; init; }
+    public bool Announce { get; init; }
 }
