@@ -1,8 +1,10 @@
 using Conduit.API.Common;
 using Conduit.API.Requests;
+using Conduit.Application.Features.Friends.Commands.Accept;
 using Conduit.Application.Features.Friends.Commands.Block;
 using Conduit.Application.Features.Friends.Commands.Create;
 using Conduit.Application.Features.Friends.Commands.Delete;
+using Conduit.Application.Features.Friends.Commands.Reject;
 using Conduit.Application.Features.Friends.Queries.GetFriendRequests;
 using Conduit.Application.Features.Friends.Queries.GetFriends;
 using Mediator;
@@ -74,6 +76,29 @@ internal sealed class FriendsEndpoints : IEndpoint
                 CancellationToken ct) =>
             {
                 var result = await sender.Send(new DeleteFriendshipCommand { FriendTag = tag }, ct);
+                return result.Success ? Results.Ok() : result.ToProblemDetails();
+            })
+            .Produces(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status400BadRequest);
+
+        group.MapPut("/accept", async (
+                [FromServices] ISender sender,
+                [FromBody] AcceptFriendshipRequest req,
+                CancellationToken ct) =>
+            {
+                var result = await sender.Send(new AcceptFriendshipCommand { FriendTag = req.FriendTag }, ct);
+                return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
+            })
+            .Accepts<AcceptFriendshipRequest>("application/json")
+            .Produces<AcceptFriendshipDto>()
+            .ProducesProblem(StatusCodes.Status400BadRequest);
+
+        group.MapDelete("/reject", async (
+                [FromServices] ISender sender,
+                [FromQuery] string tag,
+                CancellationToken ct) =>
+            {
+                var result = await sender.Send(new RejectFriendRequestCommand { FriendTag = tag }, ct);
                 return result.Success ? Results.Ok() : result.ToProblemDetails();
             })
             .Produces(StatusCodes.Status200OK)

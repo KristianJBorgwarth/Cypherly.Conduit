@@ -8,7 +8,6 @@ public sealed class GetFriendRequestsQueryHandler(IFriendProvider friendProvider
 {
     public async ValueTask<Result<IReadOnlyCollection<GetFriendRequestsDto>>> Handle(GetFriendRequestsQuery request, CancellationToken cancellationToken)
     {
-        var friendRequests = await friendProvider.GetFriendRequestsAsync(cancellationToken);
-        return Result.Ok(friendRequests);
+        return await friendProvider.GetFriendRequestsAsync(cancellationToken);
     }
 }
