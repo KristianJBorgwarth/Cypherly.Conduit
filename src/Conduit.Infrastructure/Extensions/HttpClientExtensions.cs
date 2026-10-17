@@ -18,6 +18,9 @@ internal static class HttpClientExtensions
             options.Headers.Add("If-Modified-Since");
             options.Headers.Add("If-Match");
             options.Headers.Add("If-Unmodified-Since");
+            options.Headers.Add("X-Ledger-Key");
+            options.Headers.Add("X-Ledger-Timestamp");
+            options.Headers.Add("X-Ledger-Signature");
         });
         
         var downStreamOptions =services.BuildServiceProvider().GetRequiredService<IOptions<DownstreamOptions>>().Value;
