@@ -1,7 +1,6 @@
 using System.Net.Http.Json;
 using Conduit.Application.Contracts.Providers;
 using Conduit.Application.Features.Authentication.Commands.Login;
-using Conduit.Application.Features.Authentication.Commands.RefreshTokens;
 using Conduit.Application.Features.Authentication.Commands.VerifyLogin;
 using Conduit.Application.Features.Authentication.Commands.VerifyNonce;
 using Conduit.Application.Features.Authentication.Queries;
@@ -84,18 +83,4 @@ internal sealed class AuthenticationProvider(
 
         return await response.GetValueAsync<VerifyNonceDto>(ct);
     }
-
-    public async Task<Result<RefreshTokensDto>> RefreshTokensAsync(Guid userId, Guid deviceId, string refreshToken, CancellationToken ct = default)
-    {
-        var response = await _client.PostAsJsonAsync("refresh-token", new { UserId = userId, DeviceId = deviceId, RefreshToken = refreshToken }, ct);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            logger.LogError("IdentityClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync<RefreshTokensDto>(ct);
-        }
-
-        return await response.GetValueAsync<RefreshTokensDto>(ct);
-    }
-
 }

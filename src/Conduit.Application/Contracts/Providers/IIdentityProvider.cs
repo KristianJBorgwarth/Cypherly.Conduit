@@ -1,5 +1,4 @@
 using Conduit.Application.Features.Authentication.Commands.Login;
-using Conduit.Application.Features.Authentication.Commands.RefreshTokens;
 using Conduit.Application.Features.Authentication.Commands.VerifyLogin;
 using Conduit.Application.Features.Authentication.Commands.VerifyNonce;
 using Conduit.Application.Features.Authentication.Queries;
@@ -14,5 +13,4 @@ public interface IIdentityProvider
     public Task<Result<VerifyLoginDto>> VerifyLoginAsync(Guid userId, string code, Guid nonceId, string nonce, CancellationToken ct = default);
     public Task<Result<GetNonceDto>> GetNonceAsync(Guid userId, Guid deviceId, CancellationToken ct = default);
     public Task<Result<VerifyNonceDto>> VerifyNonceAsync(Guid userId, Guid nonceId, Guid deviceId, string nonce, bool announce, CancellationToken ct = default);
-    public Task<Result<RefreshTokensDto>> RefreshTokensAsync(Guid userId, Guid deviceId, string refreshToken, CancellationToken ct = default);
 }
