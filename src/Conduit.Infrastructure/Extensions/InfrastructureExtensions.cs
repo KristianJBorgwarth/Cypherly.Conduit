@@ -8,6 +8,7 @@ public static class InfrastructureExtensions
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.ConfigureOptions(configuration);
+        services.AddValkey();
         services.ConfigureHttpClients();
     }
 }

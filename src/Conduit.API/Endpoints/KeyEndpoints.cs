@@ -1,4 +1,5 @@
 using Conduit.API.Common;
+using Conduit.API.RateLimiting;
 using Conduit.API.Requests;
 using Conduit.Application.Features.Keys.Commands.UploadOneTimePreKeys;
 using Conduit.Application.Features.Keys.Dtos;
@@ -61,7 +62,9 @@ internal sealed class KeyEndpoints : IEndpoint
 
                 return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
             })
+            .RequireRateLimiting(PreKeyFetchPolicy.Name)
             .Produces<SessionKeysDto>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status429TooManyRequests);
     }
 }
