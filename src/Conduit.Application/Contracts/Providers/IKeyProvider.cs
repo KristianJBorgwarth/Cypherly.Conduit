@@ -23,4 +23,6 @@ public interface IKeyProvider
     Task<Result> UploadOneTimePreKeysAsync(IReadOnlyCollection<PreKey> preKeys, CancellationToken ct = default);
 
     Task<Result<SessionKeysDto>> GetSessionKeysAsync(Guid accessKey, CancellationToken ct = default);
+
+    Task<Result<PreKeyCountDto>> GetPreKeyCountAsync(CancellationToken ct = default);
 }
