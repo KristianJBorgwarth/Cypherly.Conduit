@@ -27,6 +27,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(configuration);
 builder.Services.AddAuthentication(configuration);
+builder.Services.AddRateLimiting();
 builder.Services.AddEndpoints();
 builder.Services.AddOpenApi();
 
@@ -61,6 +62,8 @@ app.UseAuthentication();
 app.UseCors("AllowElectron");
 
 app.UseAuthorization();
+
+app.UseRateLimiter();
 
 app.UseHeaderPropagation();
 
