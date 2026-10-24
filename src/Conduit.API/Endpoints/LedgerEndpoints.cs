@@ -16,9 +16,7 @@ internal sealed class LedgerEndpoints : IEndpoint
     public void MapRoutes(IEndpointRouteBuilder routeBuilder)
     {
         var group = routeBuilder.MapGroup("api/ledger")
-            .WithTags("ledger")
-            .RequireAuthorization()
-            .ProducesProblem(StatusCodes.Status401Unauthorized);
+            .WithTags("ledger");
 
         group.MapPost("/streams", async (
                 [FromBody] CreateLedgerRequest req,
@@ -36,8 +34,10 @@ internal sealed class LedgerEndpoints : IEndpoint
 
                 return result.Success ? Results.Created($"api/ledger/streams/{req.LedgerId}", null) : result.ToProblemDetails();
             })
+            .RequireAuthorization()
             .Produces(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status409Conflict);
 
