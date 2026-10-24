@@ -57,6 +57,7 @@ internal sealed class UserProfileEndpoints : IEndpoint
 
                 ctx.Response.AddEtag(avatar.Etag);
                 ctx.Response.Headers.CacheControl = "no-cache";
+                ctx.Response.Headers.XContentTypeOptions = "nosniff";
 
                 return Results.File(avatar.Content, avatar.ContentType);
             })
