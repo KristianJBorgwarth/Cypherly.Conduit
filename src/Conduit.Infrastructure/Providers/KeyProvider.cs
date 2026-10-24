@@ -60,7 +60,7 @@ internal sealed class KeyProvider(
     public async Task<Result> UploadOneTimePreKeysAsync(IReadOnlyCollection<PreKey> preKeys,
         CancellationToken ct = default)
     {
-        var response = await _client.PostAsJsonAsync("otps", new { PreKeys = preKeys }, ct);
+        var response = await _client.PostAsJsonAsync("keys/otps", new { PreKeys = preKeys }, ct);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -86,5 +86,21 @@ internal sealed class KeyProvider(
             ?? throw new InvalidOperationException("Response content is null");
 
         return Result.Ok(sessionKeys);
+    }
+
+    public async Task<Result<PreKeyCountDto>> GetPreKeyCountAsync(CancellationToken ct = default)
+    {
+        var response = await _client.GetAsync("keys/otps/count", ct);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("KeyClient failed with status code {ResponseStatusCode}", response.StatusCode);
+            return await response.ToFailureResultAsync<PreKeyCountDto>(ct);
+        }
+
+        var preKeyCount = await response.Content.ReadFromJsonAsync<PreKeyCountDto>(cancellationToken: ct)
+            ?? throw new InvalidOperationException("Response content is null");
+
+        return Result.Ok(preKeyCount);
     }
 }

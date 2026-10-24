@@ -41,6 +41,17 @@ internal sealed class KeyEndpoints : IEndpoint
             .Produces(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
+        group.MapGet("/otps/count", async (
+                ISender sender,
+                CancellationToken ct) =>
+            {
+                var result = await sender.Send(new GetPreKeyCountQuery(), ct);
+
+                return result.Success ? Results.Ok(result.Value) : result.ToProblemDetails();
+            })
+            .Produces<PreKeyCountDto>(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status404NotFound);
+
         group.MapGet("/session", async (
                 [FromQuery] Guid accessKey,
                 ISender sender,
