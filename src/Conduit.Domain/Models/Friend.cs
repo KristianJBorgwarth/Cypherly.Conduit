@@ -7,4 +7,5 @@ public sealed class Friend
     public required string UserTag { get; init; }
     public string? DisplayName { get; init; }
     public Guid? AvatarKey { get; init; }
+    public IReadOnlyCollection<Guid> ConnectionIds { get; init; } = [];
 }

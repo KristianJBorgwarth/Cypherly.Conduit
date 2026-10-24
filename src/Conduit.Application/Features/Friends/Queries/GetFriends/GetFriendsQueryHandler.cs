@@ -1,31 +1,17 @@
 using Conduit.Application.Abstractions;
 using Conduit.Application.Contracts.Providers;
 using Conduit.Domain.Common;
-using Conduit.Domain.Models;
 
 namespace Conduit.Application.Features.Friends.Queries.GetFriends;
 
-public sealed class GetFriendsQueryHandler(
-    IFriendProvider friendProvider,
-    IConnectionIdProvider connectionIdProvider)
+public sealed class GetFriendsQueryHandler(IFriendProvider friendProvider)
     : IQueryHandler<GetFriendsQuery, IReadOnlyCollection<GetFriendsDto>>
 {
     public async ValueTask<Result<IReadOnlyCollection<GetFriendsDto>>> Handle(GetFriendsQuery request, CancellationToken ct)
     {
         var friendsResult = await friendProvider.GetFriendsAsync(ct);
         if (!friendsResult.Success) return Result.Fail<IReadOnlyCollection<GetFriendsDto>>(friendsResult.Error);
-        
-        if(friendsResult.RequiredValue.Count == 0) return Result.Ok<IReadOnlyCollection<GetFriendsDto>>([]);
 
-        var friendIds = friendsResult.RequiredValue.Select(f => f.Id).ToList();
-        var conIdsResult = await connectionIdProvider.GetConnectionIds(friendIds, ct);
-        if (!conIdsResult.Success) return Result.Fail<IReadOnlyCollection<GetFriendsDto>>(conIdsResult.Error);
-
-        var dtos = MapToDtos(friendsResult.RequiredValue, conIdsResult.RequiredValue);
-
-        return dtos;
+        return friendsResult.RequiredValue.Select(f => new GetFriendsDto(f)).ToArray();
     }
-
-    private static GetFriendsDto[] MapToDtos(IReadOnlyCollection<Friend> friends, Dictionary<Guid, IReadOnlyCollection<Guid>> connectionIds) =>
-        [.. friends.Select(f => new GetFriendsDto(f, connectionIds[f.Id]))];
 }

@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Net.Http.Json;
 using Conduit.Application.Contracts.Providers;
 using Conduit.Domain.Common;
 using Conduit.Infrastructure.Constants;
@@ -32,24 +31,5 @@ internal sealed class ConnectionIdProvider(
         return Result.Ok(value.ConnectionIds);
     }
 
-    public async Task<Result<Dictionary<Guid, IReadOnlyCollection<Guid>>>> GetConnectionIds(IReadOnlyCollection<Guid> userIds,
-        CancellationToken ct = default)
-    {
-        var response = await _client.PostAsJsonAsync("devices/connectionids", new
-        {
-            TenantIds = userIds
-        }, ct);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            logger.LogError("ConnectionIdClient failed with status code {ResponseStatusCode}", response.StatusCode);
-            return await response.ToFailureResultAsync<Dictionary<Guid, IReadOnlyCollection<Guid>>>(ct);
-        }
-
-        var value = await response.GetValueAsync<MultipleConnectionIds>(ct: CancellationToken.None);
-        return Result.Ok(value.ConnectionIds);
-    }
-
     private sealed record ConnectionIdsDto(IReadOnlyCollection<Guid> ConnectionIds);
-    private sealed record MultipleConnectionIds(Dictionary<Guid, IReadOnlyCollection<Guid>> ConnectionIds);
 }

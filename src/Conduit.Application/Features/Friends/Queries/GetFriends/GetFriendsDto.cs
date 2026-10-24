@@ -11,12 +11,12 @@ public sealed class GetFriendsDto
     public Guid? AvatarKey { get; private init; }
     public IReadOnlyCollection<Guid> ConnectionIds { get; private init; }
 
-    public GetFriendsDto(Friend friend, IReadOnlyCollection<Guid> connectionIds)
+    public GetFriendsDto(Friend friend)
     {
         Username = friend.Username;
         UserTag = friend.UserTag;
         DisplayName = friend.DisplayName;
         AvatarKey = friend.AvatarKey;
-        ConnectionIds = connectionIds;
+        ConnectionIds = friend.ConnectionIds;
     }
 }
