@@ -8,4 +8,5 @@ internal static class ClientNames
     public const string IdentityUserClient = "identity.user.svc";
     public const string KeyClient = "keystore.svc";
     public const string LedgerClient = "ledger.svc";
+    public const string IdentityWellKnownClient = "identity.wellknown.svc";
 }
