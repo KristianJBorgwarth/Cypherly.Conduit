@@ -71,9 +71,9 @@ internal sealed class AuthenticationProvider(
 
     }
 
-    public async Task<Result<VerifyNonceDto>> VerifyNonceAsync(Guid userId, Guid nonceId, Guid deviceId, string nonce, bool announce, CancellationToken ct = default)
+    public async Task<Result<VerifyNonceDto>> VerifyNonceAsync(Guid userId, Guid nonceId, Guid deviceId, string nonce, bool announce, IReadOnlyList<string> tokenRequests, CancellationToken ct = default)
     {
-        var response = await _client.PostAsJsonAsync("verify-nonce", new { UserId = userId, NonceId = nonceId, DeviceId = deviceId, Nonce = nonce, Announce = announce }, ct);
+        var response = await _client.PostAsJsonAsync("verify-nonce", new { UserId = userId, NonceId = nonceId, DeviceId = deviceId, Nonce = nonce, Announce = announce, TokenRequests = tokenRequests }, ct);
 
         if (!response.IsSuccessStatusCode)
         {
