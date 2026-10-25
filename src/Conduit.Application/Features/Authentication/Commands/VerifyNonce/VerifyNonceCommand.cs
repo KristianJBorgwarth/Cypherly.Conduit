@@ -9,4 +9,5 @@ public sealed record VerifyNonceCommand : ICommand<VerifyNonceDto>
     public required Guid DeviceId { get; init; }
     public required string Nonce { get; init; }
     public bool Announce { get; init; }
+    public IReadOnlyList<string> TokenRequests { get; init; } = [];
 }

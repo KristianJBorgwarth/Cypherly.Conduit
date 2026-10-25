@@ -34,7 +34,6 @@ internal sealed class LedgerEndpoints : IEndpoint
 
                 return result.Success ? Results.Created($"api/ledger/streams/{req.LedgerId}", null) : result.ToProblemDetails();
             })
-            .RequireAuthorization()
             .Produces(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status401Unauthorized)
