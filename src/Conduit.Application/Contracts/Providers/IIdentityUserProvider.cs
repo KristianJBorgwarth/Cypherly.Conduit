@@ -19,4 +19,6 @@ public interface IIdentityUserProvider
         int devicePlatform,
         string base64DevicePublicKey,
         CancellationToken ct = default);
+
+    Task<Result> DeleteDeviceAsync(Guid targetDeviceId, CancellationToken ct = default);
 }
