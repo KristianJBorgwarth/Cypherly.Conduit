@@ -9,6 +9,7 @@ using Conduit.Application.Features.Authentication.Commands.VerifyLogin;
 using Conduit.Application.Features.Authentication.Commands.VerifyNonce;
 using Conduit.Application.Features.Authentication.Queries;
 using Conduit.Application.Features.Device.Commands.Create;
+using Conduit.Application.Features.Device.Commands.Delete;
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
 
@@ -158,6 +159,20 @@ internal sealed class IdentityEndpoints : IEndpoint
         })
         .Produces<CreateDeviceDto>()
         .Accepts<CreateDeviceRequest>("application/json")
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status401Unauthorized)
+        .ProducesProblem(StatusCodes.Status404NotFound);
+
+        user.MapDelete("device/{targetDeviceId:guid}", async (
+                [FromServices] ISender sender,
+                [FromRoute] Guid targetDeviceId,
+                CancellationToken ct) =>
+        {
+            var result = await sender.Send(new DeleteDeviceCommand { TargetDeviceId = targetDeviceId }, ct);
+            return result.Success ? Results.Ok() : result.ToProblemDetails();
+        })
+        .RequireAuthorization()
+        .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .ProducesProblem(StatusCodes.Status401Unauthorized)
         .ProducesProblem(StatusCodes.Status404NotFound);

@@ -99,6 +99,22 @@ internal sealed class IdentityUserProvider(
         return await response.GetValueAsync<CreateDeviceDto>(ct);
     }
 
+    public async Task<Result> DeleteDeviceAsync(Guid targetDeviceId, CancellationToken ct = default)
+    {
+        var response = await SendAsync(() => _client.DeleteAsync($"device/{targetDeviceId}", ct), ct);
+
+        if (response is null)
+            return Result.Fail(Unreachable);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("IdentityUserClient failed with status code {ResponseStatusCode}", response.StatusCode);
+            return await response.ToPassthroughFailureResultAsync(ct);
+        }
+
+        return Result.Ok();
+    }
+
     private async Task<HttpResponseMessage?> SendAsync(Func<Task<HttpResponseMessage>> send, CancellationToken ct)
     {
         try
