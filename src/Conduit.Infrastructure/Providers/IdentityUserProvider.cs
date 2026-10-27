@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using Conduit.Application.Contracts.Providers;
 using Conduit.Application.Features.Account.Commands.Register;
 using Conduit.Application.Features.Device.Commands.Create;
+using Conduit.Application.Features.Device.Queries.GetDevices;
 using Conduit.Domain.Common;
 using Conduit.Infrastructure.Constants;
 using Conduit.Infrastructure.Extensions;
@@ -97,6 +98,22 @@ internal sealed class IdentityUserProvider(
         }
 
         return await response.GetValueAsync<CreateDeviceDto>(ct);
+    }
+
+    public async Task<Result<GetDevicesDto>> GetDevicesAsync(CancellationToken ct = default)
+    {
+        var response = await SendAsync(() => _client.GetAsync("devices", ct), ct);
+
+        if (response is null)
+            return Result.Fail<GetDevicesDto>(Unreachable);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError("IdentityUserClient failed with status code {ResponseStatusCode}", response.StatusCode);
+            return await response.ToPassthroughFailureResultAsync<GetDevicesDto>(ct);
+        }
+
+        return await response.GetValueAsync<GetDevicesDto>(ct);
     }
 
     public async Task<Result> DeleteDeviceAsync(Guid targetDeviceId, CancellationToken ct = default)

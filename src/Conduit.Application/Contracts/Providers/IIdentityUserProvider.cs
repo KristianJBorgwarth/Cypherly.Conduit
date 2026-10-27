@@ -1,5 +1,6 @@
 using Conduit.Application.Features.Account.Commands.Register;
 using Conduit.Application.Features.Device.Commands.Create;
+using Conduit.Application.Features.Device.Queries.GetDevices;
 using Conduit.Domain.Common;
 
 namespace Conduit.Application.Contracts.Providers;
@@ -19,6 +20,8 @@ public interface IIdentityUserProvider
         int devicePlatform,
         string base64DevicePublicKey,
         CancellationToken ct = default);
+
+    Task<Result<GetDevicesDto>> GetDevicesAsync(CancellationToken ct = default);
 
     Task<Result> DeleteDeviceAsync(Guid targetDeviceId, CancellationToken ct = default);
 }
