@@ -1,4 +1,4 @@
-SLN := Cypherly.Conduit.sln
+SLN := Cendrite.Conduit.sln
 
 .PHONY: restore build test clean
 
