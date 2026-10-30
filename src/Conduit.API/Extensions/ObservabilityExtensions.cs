@@ -12,7 +12,7 @@ public static class ObservabilityExtensions
         services.AddOpenTelemetry()
             .ConfigureResource(r => r
                 .AddService(
-                    serviceName: "cypherly.conduit.svc",
+                    serviceName: "cendrite.conduit.svc",
                     serviceVersion: typeof(Program).Assembly.GetName().Version?.ToString(),
                     serviceInstanceId: Environment.MachineName))
             .WithTracing(b => b
